@@ -1,0 +1,4 @@
+Set env to prod
+apply migrations
+Apply rbac migration yii migrate --migrationPath='@yii/rbac/migrations'
+develop mechanism for rehash
