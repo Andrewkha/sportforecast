@@ -485,7 +485,7 @@ trait gameTrait
             'allModels' => Forecasts::getTopFiveForecastersWithPoints($tournament, $tour)
         ]);
 
-        return Yii::$app->controller->renderPartial('_tourResultMail', ['trn' => $trn, 'games' => $games, 'forecasters' => $forecasters, 'tour' => $tour]);
+        return Yii::$app->controller->renderPartial('@app/mail/_tourResultMail', ['trn' => $trn, 'games' => $games, 'forecasters' => $forecasters, 'tour' => $tour]);
 
     }
 

@@ -8,14 +8,13 @@
 
 namespace app\models\traits;
 
+use Yii;
 use app\models\result\Result;
-use app\components\grid\extendedGridView;
 use app\models\games\Games;
 use app\models\forecasts\Forecasts;
 use yii\data\ArrayDataProvider;
 use app\models\users\UsersTournaments;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
 
 trait tournamentsTrait
 {
@@ -148,156 +147,18 @@ trait tournamentsTrait
 
     public static function generateFinalNews($tournament) {
 
-        $content = '';
-
         $trn = self::findOne($tournament);
-        $content.= Html::tag('p', "Закончился турнир $trn->tournament_name. Пожалуйста, ознакомьтесь с его результатами");
 
-        $content .= "Подробную информацию о турнире можно посомотреть на его ".Html::a('странице', ['@web/tournaments/details', 'id' => $trn->id_tournament]);
-        $content .= "<br>";
-
-        $content .= "<div class = 'row'>";
 
         $forecasters = new ArrayDataProvider([
             'allModels' => Forecasts::getTopThreeForecastersWithPoints($tournament)
         ]);
 
-        $content .= extendedGridView::widget([
-            'dataProvider' => $forecasters,
-            'caption' => 'Победители прогноза',
-            'summary' => false,
-            'options' => [
-                'class' => 'col-xs-12 col-md-5 col-lg-5',
-            ],
-            'columns' => [
-                [
-                    'class' => 'yii\grid\SerialColumn',
-                    'contentOptions' => [
-                        'align' => 'center',
-                        'style' => 'vertical-align:middle',
-                    ],
-                    'headerOptions' => [
-                        'style' => 'text-align:center',
-                    ],
-                    'options' => [
-                        'class' => 'col-xs-1',
-                    ],
-                    'header' => 'Место',
-                ],
-
-                [
-                    'header' => 'Пользователь',
-                    'vAlign' => 'middle',
-                    'options' => [
-                        'class' => 'col-xs-9',
-                    ],
-                    'hAlign' => 'left',
-                    'headerOptions' => [
-                        'style' => 'text-align:center',
-                    ],
-                    'content' => function($model) {
-
-                        return $model->idUser->username;
-                    }
-                ],
-
-                [
-                    'header' => 'Очки',
-                    'attribute' => "points",
-                    'vAlign' => 'middle',
-                    'options' => [
-                        'class' => 'col-xs-1',
-                    ],
-                    'hAlign' => 'center',
-                    'headerOptions' => [
-                        'style' => 'text-align:center',
-                    ],
-                ],
-            ]
-        ]);
         $standings = new ArrayDataProvider([
             'allModels' => Result::getStandings($tournament)
         ]);
 
-        $content .= extendedGridView::widget([
-            'dataProvider' => $standings,
-            'options' => [
-                'class' => 'col-xs-12 col-md-5 col-md-offset-1 col-lg-6 col-lg-offset-1'
-            ],
-            'summary' => false,
-            'caption' => 'Турнирная таблица',
-            'columns' =>  [
-                [
-                    'header' => 'Место',
-                    'class' => 'yii\grid\SerialColumn',
-                    'contentOptions' => [
-                        'align' => 'center',
-                        'style' => 'vertical-align:middle',
-                    ],
-                    'options' => [
-                        'class' => 'col-xs-1'
-                    ],
-                    'headerOptions' => [
-                        'style' => 'text-align:center',
-                    ],
-                ],
-
-                [
-                    'header' => 'Команда',
-                    'content' => function($model) {
-                        return $model['team_name'];
-                    },
-                    'contentOptions' => [
-                        'style' => 'vertical-align:middle',
-                    ],
-                    'headerOptions' => [
-                        'style' => 'text-align:center',
-                    ],
-                    'options' => [
-                        'class' => 'col-xs-9'
-                    ],
-                ],
-
-                [
-                    'header' => 'Игры',
-                    'attribute' => 'games_played',
-                    'contentOptions' => [
-                        'align' => 'center',
-                        'style' => 'vertical-align:middle',
-                    ],
-                    'options' => [
-                        'class' => 'col-xs-1'
-                    ],
-                    'headerOptions' => [
-                        'style' => 'text-align:center',
-                    ],
-                    'content' => function ($model) {
-                        return (isset($model['games_played']))? $model['games_played'] : 0;
-                    }
-                ],
-
-                [
-                    'header' => 'Очки',
-                    'contentOptions' => [
-                        'align' => 'center',
-                        'style' => 'vertical-align:middle',
-                    ],
-                    'options' => [
-                        'class' => 'col-xs-1'
-                    ],
-                    'headerOptions' => [
-                        'style' => 'text-align:center',
-                    ],
-                    'content' => function ($model) {
-                        return (isset($model['pts']))? $model['pts'] : 0;
-                    }
-                ],
-            ]
-        ]);
-
-        $content .= "</div>";
-
-        return $content;
+        return Yii::$app->controller->renderPartial('@app/mail/_tournamentFinishedNews', ['trn' => $trn, 'forecasters' => $forecasters, 'standings' => $standings]);
     }
 
     public static function getAutoprocessTournaments() {
