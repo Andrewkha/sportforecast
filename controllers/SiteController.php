@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\models\users\RehashFrom;
+use app\models\users\Users;
 use app\models\users\UsersTournaments;
 use Yii;
 use yii\data\ArrayDataProvider;
@@ -17,10 +17,10 @@ use yii\web\BadRequestHttpException;
 use yii\base\InvalidParamException;
 use app\models\ContactForm;
 use app\models\users\ProfileForm;
-use app\models\news\News;
 use app\models\forecasts\Forecasts;
 use app\models\games\Games;
 use app\models\tournaments\Tournaments;
+use yii\helpers\Html;
 
 
 class SiteController extends Controller
@@ -76,7 +76,6 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        $news = News::getTopActiveNews();
         Yii::$app->user->returnUrl = Yii::$app->request->url;
 
         if(Yii::$app->user->isGuest) {
@@ -104,7 +103,7 @@ class SiteController extends Controller
             'allModels' => UsersTournaments::getActivePendingUserTournamentsAndPosition(Yii::$app->user->id),
         ]);
 
-        return $this->render('indexUser', compact('tournaments', 'news', 'userTournaments', 'futureGames', 'recentGames'));
+        return $this->render('indexUser', compact('tournaments', 'userTournaments', 'futureGames', 'recentGames'));
     }
 
     public function actionLogin()
@@ -226,6 +225,10 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * @return string|\yii\web\Response
+     * @var $user Users
+     */
     public function actionContact()
     {
         $model = new ContactForm();

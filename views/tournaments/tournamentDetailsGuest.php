@@ -1,15 +1,20 @@
 <?php
 
 use yii\helpers\Html;
-use kartik\grid\GridView;
 use app\assets\ModalAsset;
 
 ModalAsset::register($this);
 /* @var $this yii\web\View */
-/* @var $model app\models\tournaments\tournaments */
+/**
+ * @var $tournament \app\models\tournaments\Tournaments
+ * @var $teamParticipants
+ * @var $forecasters
+ * @var $tour_list
+ * @var $tourGames
+ */
 
 $this->title = $tournament->tournament_name;
-$this->params['breadcrumbs'][] = ['label' => 'Турниры', 'url' => '@web/tournaments'];
+$this->params['breadcrumbs'][] = ['label' => 'Турниры', 'url' => '/tournaments'];
 $this->params['breadcrumbs'][] = $tournament->tournament_name;
 ?>
 

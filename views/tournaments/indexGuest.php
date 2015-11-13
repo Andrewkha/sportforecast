@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use kartik\grid\GridView;
+use app\components\grid\extendedGridView;
 use app\models\forecasts\Forecasts;
 
 /* @var $this yii\web\View */
@@ -18,16 +18,13 @@ $this->params['breadcrumbs'][] = $this->title;
         <h2>Статистика по всем турнирам</h2>
 
         <div class="row">
-            <?= GridView::widget([
+            <?= extendedGridView::widget([
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
                 'bordered' => false,
-                'export' => false,
                 'options' => [
                     'class' => 'col-xs-12 col-md-10 col-lg-8'
                 ],
-                'responsive' => false,
-                'responsiveWrap' => false,
                 'resizableColumns' => false,
                 'summary' => false,
                 'columns' => [

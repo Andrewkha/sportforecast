@@ -13,6 +13,8 @@ use app\models\users\UsersTournaments;
 use app\models\forecasts\Forecasts;
 use app\models\tournaments\Tournaments;
 use app\models\result\Result;
+use app\models\reminders\Reminders;
+use yii\base\ErrorException;
 use yii\helpers\ArrayHelper;
 use yii\data\ArrayDataProvider;
 
@@ -40,6 +42,8 @@ trait remindersTrait
         $users = UsersTournaments::getReminderRecipients($tournament, $tour);
         if(!empty($users)) {
             return self::sendReminder($tour, $tournament, $users);
+        } else {
+            throw new ErrorException('Error sending reminders');
         }
     }
 
@@ -48,6 +52,8 @@ trait remindersTrait
         $users = UsersTournaments::getAutoReminderRecipients($tournament, $tour);
         if(!empty($users)) {
             return self::sendReminder($tour, $tournament, $users);
+        } else {
+            throw new ErrorException('Error sending reminders');
         }
     }
 

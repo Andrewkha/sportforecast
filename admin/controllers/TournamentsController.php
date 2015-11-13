@@ -3,6 +3,7 @@
 namespace app\admin\controllers;
 
 use Yii;
+use yii\base\Exception;
 use yii\data\ArrayDataProvider;
 use app\models\tournaments\Tournaments;
 use app\models\tournaments\TournamentsSearch;
@@ -193,6 +194,11 @@ class TournamentsController extends Controller
     }
 
     //filling in aliases for autoprocessing
+    /**
+     * @param $tournament
+     * @var $trn Tournaments
+     * @return string|\yii\web\Response
+     */
 
     public function actionAlias($tournament) {
 
@@ -245,6 +251,11 @@ class TournamentsController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return null|\app\models\tournaments\TeamTournaments
+     * @throws NotFoundHttpException
+     */
     //find teamtournament model to delete a participant
     protected function findParticipantModel($id)
     {

@@ -144,6 +144,9 @@ class Games extends \yii\db\ActiveRecord
 
         //if tour finished, need to send notifications (if not already sent) and put tournament as finished if it was last tour
 
+        /**
+         * @var $tournamentModel \app\models\tournaments\Tournaments
+         */
         if(self::isTourFinished($tournament, $this->tour)) {
 
             $tournamentModel = Tournaments::findOne($tournament);

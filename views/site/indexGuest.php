@@ -1,11 +1,15 @@
 <?php
 use kartik\widgets\Growl;
-use kartik\grid\GridView;
 use yii\helpers\Html;
-use yii\helpers\StringHelper;
+use app\components\widgets\News;
+use app\components\grid\extendedGridView;
 use yii\bootstrap\Collapse;
-use yii\bootstrap\Modal;
-/* @var $this yii\web\View */
+/** @var $this yii\web\View
+   * @var $futureGames
+   * @var $recentGames
+   * @var $tournaments
+ *
+ */
 $this->title = 'Сайт спортивных прогнозов';
 ?>
 
@@ -41,13 +45,10 @@ if(Yii::$app->session->hasFlash('success')) {
                         <?php $content .= "<p class = 'text-right'>".Html::a("<i class = 'fa fa-list-alt'></i> Все игры", ['tournaments/details', 'id' => $tournament['id_tournament']])."</p>";?>
                         <?php foreach($tournament['games'] as $k=> $tour):?>
 
-                            <?php $content .= GridView::widget([
+                            <?php $content .= extendedGridView::widget([
                                     'dataProvider' => $tour,
-                                    'export' => false,
                                     'summary' => '',
-                                    'responsive' => false,
                                     'bordered' => false,
-                                    'responsiveWrap' => false,
                                     'showHeader' => false,
                                     'caption' => "Тур $k",
                                     'captionOptions' => [
@@ -81,7 +82,7 @@ if(Yii::$app->session->hasFlash('success')) {
                                         ],
 
                                         [
-                                            'content' => function($model) {
+                                            'content' => function() {
                                                 return
                                                 ' - '
                                                 ;
@@ -132,14 +133,11 @@ if(Yii::$app->session->hasFlash('success')) {
                         <?php $content .= "<p class = 'text-right'>".Html::a("<i class = 'fa fa-list-alt'></i> Все игры", ['tournaments/details', 'id' => $tournament['id_tournament']])."</p>";?>
                         <?php foreach($tournament['games'] as $k=> $tour):?>
 
-                            <?php $content .= GridView::widget([
+                            <?php $content .= extendedGridView::widget([
                                 'dataProvider' => $tour,
-                                'export' => false,
                                 'summary' => '',
-                                'responsive' => false,
                                 'showHeader' => false,
                                 'bordered' => false,
-                                'responsiveWrap' => false,
                                 'caption' => "Тур $k",
                                 'captionOptions' => [
                                     'colspan' => 4, 'class' => 'text-center normal'
@@ -221,15 +219,17 @@ if(Yii::$app->session->hasFlash('success')) {
 
             <div class = "text-center">
                 <div class ="row">
-                    <h3>Текущие турниры</h3>
-                    <?= GridView::widget([
+                    <?= extendedGridView::widget([
                         'dataProvider' => $tournaments,
-                        'export' => false,
                         'emptyText' => 'Нет текущих турниров',
-                        'responsiveWrap' => false,
+                        'caption' => 'Текущие турниры',
                         'condensed' => true,
+                        'captionOptions' => [
+                            'bordered' => false,
+                            'class' => 'text-center',
+                            'style' => 'font-size: 1.5em;'
+                        ],
                         'bordered' => false,
-                        'responsive' => false,
                         'summary' => '',
                         'columns' => [
                             [
@@ -282,56 +282,17 @@ if(Yii::$app->session->hasFlash('success')) {
                     ])
 
                     ?>
+                    <p class = 'text-right'>
+                        <?= Html::a("<i class = 'fa fa-futbol-o'></i> Все турниры", ['tournaments/index']);?>
+                    </p>
                 </div>
-                <p class = 'text-right'>
-                    <?= Html::a("<i class = 'fa fa-futbol-o'></i> Все турниры", ['tournaments/index']);?>
-                </p>
+
             </div>
 
             <div class="text-center">
                 <div class = "row">
-                    <h3>Новости</h3>
-                    <?php foreach($news as $one):?>
-                        <div class = "row news text-left">
-                            <div class="col-xs-12">
-                                <strong><?= ($one->id_tournament == 0) ? 'Новости сайта' : $one->tournament->tournament_name;?></strong>
-                            </div>
-                            <div class="col-xs-12">
-                                <span class = "time"><?= date('d.m.Y H:i', $one->date);?></span>
-                                <?php Modal::begin([
-                                    'header' => "<h4>".$one->subject."</h4>",
-                                    'headerOptions' => [
-                                        'class' => 'bg-info'
-                                    ],
-                                    'size' => Modal::SIZE_LARGE,
-                                    'toggleButton' => [
-                                        'tag' => 'a',
-                                        'label' => $one->subject,
-                                        'style' => 'font-size: 1em; cursor: pointer;'
-                                    ],
-                                    'footer' =>
-                                        "<div class='row'>".
-                                            "<div class='col-xs-7'>".
-                                                "<p class = 'pull-left'>Разместил: <strong>{$one->author0->username}</strong>"."</p>".
-                                            "</div>".
-                                            "<div class='col-xs-4'>".
-                                                "<p class='pull-right'>".date('d.m.Y H:i', $one->date)."</p>".
-                                            "</div>".
-                                        "</div>",
-                                ]);?>
-                                <div class="panel panel-default">
-                                    <div class="panel-body">
-                                        <?= $one->body;?>
-                                    </div>
-                                </div>
-                                <?php Modal::end();?>
-                            </div>
-                        </div>
-                    <?php endforeach;?>
+                    <?= News::widget(['title' => 'Новости']);?>
                 </div>
-                <p class = 'text-right'>
-                    <a href = 'news'><i class = 'fa fa-newspaper-o'></i> Все новости</a>
-                </p>
             </div>
         </div>
     </div>

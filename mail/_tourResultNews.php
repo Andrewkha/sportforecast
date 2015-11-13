@@ -3,10 +3,16 @@
 use app\components\grid\extendedGridView;
 use yii\helpers\Html;
 
+/**
+ * @var $games
+ * @var $trn
+ * @var $tour
+ * @var $forecasters
+ */
 ?>
 
 <p>Закончился <?=$tour?> тур <?=$trn->tournament_name?>, ознакомьтесь с его результатами</p>
-Подробную информацию о турнире можно посомотреть на его <?=Html::a('странице', ['@web/tournaments/details', 'id' => $trn->id_tournament]);?>
+Подробную информацию о турнире можно посомотреть на его <?=Html::a('странице', ['/tournaments/details', 'id' => $trn->id_tournament]);?>
 
 <div class = 'row'>
 

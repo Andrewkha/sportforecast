@@ -1,10 +1,10 @@
 <?php
 
 use yii\helpers\Html;
-use kartik\grid\GridView;
 use app\models\tournaments\Tournaments;
 use kartik\widgets\ActiveForm;
 use kartik\widgets\Growl;
+use app\components\grid\extendedGridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\tournaments\TournamentsSearch */
@@ -54,16 +54,13 @@ $this->params['breadcrumbs'][] = $this->title;
         ]);?>
 
             <div class="row">
-                <?= GridView::widget([
+                <?= extendedGridView::widget([
                     'dataProvider' => $userTournaments,
                     'bordered' => false,
-                    'export' => false,
                     'summary' => false,
                     'options' => [
                         'class' => 'col-xs-12 col-lg-9'
                     ],
-                    'responsive' => false,
-                    'responsiveWrap' => false,
                     'resizableColumns' => false,
                     'columns' => [
 
@@ -237,16 +234,13 @@ $this->params['breadcrumbs'][] = $this->title;
         <h2>Ваши законченные турниры</h2>
         <h4>Кликните на название турнира, чтобы посмотреть результаты</h4>
         <div class="row">
-            <?= GridView::widget([
+            <?= extendedGridView::widget([
                 'dataProvider' => $userFinishedTournaments,
                 'bordered' => false,
-                'export' => false,
                 'summary' => false,
                 'options' => [
                     'class' => 'col-xs-12 col-lg-9'
                 ],
-                'responsive' => false,
-                'responsiveWrap' => false,
                 'resizableColumns' => false,
                 'columns' => [
 
@@ -372,16 +366,13 @@ $this->params['breadcrumbs'][] = $this->title;
         <h2>Турниры без вашего участия</h2>
         <h4>Кликните на название турнира, чтобы посмотреть результаты</h4>
         <div class="row">
-            <?= GridView::widget([
+            <?= extendedGridView::widget([
                 'dataProvider' => $notUserTournaments,
                 'bordered' => false,
-                'export' => false,
                 'summary' => false,
                 'options' => [
                     'class' => 'col-xs-12 col-sm-10 col-lg-8'
                 ],
-                'responsive' => false,
-                'responsiveWrap' => false,
                 'resizableColumns' => false,
                 'columns' => [
 

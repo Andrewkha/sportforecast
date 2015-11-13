@@ -9,6 +9,7 @@ use app\models\result\Result;
 use app\models\games\Games;
 use app\models\tournaments\Tournaments;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\db\Query;
 
@@ -26,7 +27,7 @@ use yii\db\Query;
  * @property Games $idGame
  * @property Users $idUser
  */
-class Forecasts extends \yii\db\ActiveRecord
+class Forecasts extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -90,25 +91,37 @@ class Forecasts extends \yii\db\ActiveRecord
         return $this->hasOne(Users::className(), ['id' => 'id_user']);
     }
 
-    //calculate forecast points
-    private function forecastPoints($scoreHome, $scoreGuest) {
-        if($scoreHome == NULL or $scoreGuest == NULL) return 0;
-        if(($this->fscore_home == $scoreHome) and ($this->fscore_guest == $scoreGuest)) return 3;
-        if(($this->fscore_home - $this->fscore_guest) == ($scoreHome - $scoreGuest)) return 2;
-        if((($this->fscore_home - $this->fscore_guest) > 0 and ($scoreHome - $scoreGuest) > 0) OR ((($this->fscore_home - $this->fscore_guest) < 0 and ($scoreHome - $scoreGuest) < 0))) return 1;
-        return 0;
-    }
 
     //assign forecast points after gave finishes
 
+    /**
+     * @param $game
+     * @param $scoreHome
+     * @param $scoreGuest
+     */
     public static function setForecastPoints($game, $scoreHome, $scoreGuest) {
 
         $forecasts = self::find()->where(['id_game' => $game])->all();
         foreach($forecasts as $forecast) {
-            $forecast->points = $forecast->forecastPoints($scoreHome, $scoreGuest);
-            $forecast->save(false);
+            if($forecast->forecastPoints($scoreHome, $scoreGuest) !== false)
+                $forecast->save(false);
         }
     }
+
+    //calculate forecast points
+    /**
+     * @param $scoreHome
+     * @param $scoreGuest
+     * @return int
+     */
+    protected function forecastPoints($scoreHome, $scoreGuest) {
+        if($scoreHome == NULL or $scoreGuest == NULL) return 0;
+        if(($this->fscore_home == $scoreHome) and ($this->fscore_guest == $scoreGuest)) return $this->points = 3;
+        if(($this->fscore_home - $this->fscore_guest) == ($scoreHome - $scoreGuest)) return $this->points = 2;
+        if((($this->fscore_home - $this->fscore_guest) > 0 and ($scoreHome - $scoreGuest) > 0) OR ((($this->fscore_home - $this->fscore_guest) < 0 and ($scoreHome - $scoreGuest) < 0))) return $this->points = 1;
+        return $this->points = 0;
+    }
+
 
     //get forecasters with points for the tournament
     public static function getForecastersWithPoints($tournament) {

@@ -2,7 +2,10 @@
 
 namespace app\models\countries;
 
+use app\models\teams\Teams;
+use app\models\TOurnaments\Tournaments;
 use Yii;
+use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -14,7 +17,7 @@ use yii\helpers\ArrayHelper;
  * @property Teams[] $teams
  * @property Tournaments[] $tournaments
  */
-class Countries extends \yii\db\ActiveRecord
+class Countries extends ActiveRecord
 {
 
     //indicate that tournament is international

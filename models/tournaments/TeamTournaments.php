@@ -2,8 +2,11 @@
 
 namespace app\models\tournaments;
 
+use app\models\teams\Teams;
 use Yii;
+use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use app\models\games\Games;
 
 /**
  * This is the model class for table "{{%team_tournaments}}".
@@ -16,7 +19,7 @@ use yii\helpers\ArrayHelper;
  * @property Teams $idTeam
  * @property Tournaments $idTournament
  */
-class TeamTournaments extends \yii\db\ActiveRecord
+class TeamTournaments extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -68,7 +71,10 @@ class TeamTournaments extends \yii\db\ActiveRecord
         $candidates = self::getTournamentParticipants($id)->all();
         return ArrayHelper::getColumn($candidates, 'id_team');
     }
-
+    /**
+     * @param $id
+     * @return \yii\db\QueryInterface
+     */
     //get participants for the specified tournament
     public static function getTournamentParticipants($id) {
 
@@ -76,7 +82,12 @@ class TeamTournaments extends \yii\db\ActiveRecord
     }
 
 
-    //get participants for the specified tournament
+    /**
+     * get participants for the specified tournament
+     * @param $id
+     * @var $query \yii\db\QueryInterface
+     * @return array|ActiveRecord[]
+     */
     public static function getTournamentParticipantsTeams($id) {
 
         return self::find()
@@ -100,7 +111,7 @@ class TeamTournaments extends \yii\db\ActiveRecord
      */
     public function getIdTeam()
     {
-        return $this->hasOne(\app\models\teams\Teams::className(), ['id_team' => 'id_team']);
+        return $this->hasOne(Teams::className(), ['id_team' => 'id_team']);
     }
 
     /**
@@ -108,7 +119,7 @@ class TeamTournaments extends \yii\db\ActiveRecord
      */
     public function getIdTournament()
     {
-        return $this->hasOne(\app\models\tournaments\Tournaments::className(), ['id_tournament' => 'id_tournament']);
+        return $this->hasOne(Tournaments::className(), ['id_tournament' => 'id_tournament']);
     }
 
 
