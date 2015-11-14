@@ -7,6 +7,7 @@ use Yii;
 use app\models\tournaments\Tournaments;
 use app\models\tournaments\TourResultNotifications;
 use app\models\tournaments\TeamTournaments;
+use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use app\models\forecasts\Forecasts;
 use app\models\result\Result;
@@ -31,8 +32,9 @@ use app\models\traits\gameTrait;
  * @property Forecasts[] $forecasts
  * @property TeamTournaments $idTeamGuest
  * @property TeamTournaments $idTeamHome
+ * @property mixed competitors
  */
-class Games extends \yii\db\ActiveRecord
+class Games extends ActiveRecord
 {
     use gameTrait;
     /**
@@ -171,6 +173,10 @@ class Games extends \yii\db\ActiveRecord
 
     //check if there's a game for these teams with the same tour or on the same date - validator
 
+    /**
+     * @param $attribute
+     * @param $params
+     */
     public function ifGameExists($attribute, $params) {
 
         if(Games::find()->where(['id_team_home' => $this->id_team_home])->andWhere(['id_team_guest' => $this->id_team_guest])->andWhere(['tour' => $this->tour])->one() ||
@@ -201,6 +207,10 @@ class Games extends \yii\db\ActiveRecord
 
     //upload games from Excel
 
+    /**
+     * @param $file
+     * @return mixed
+     */
     public static function uploadExcel($file) {
 
         $excel = PHPExcel_IOFactory::load($file);

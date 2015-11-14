@@ -14,7 +14,7 @@ use yii\helpers\ArrayHelper;
 use yii\db\Query;
 
 /**
- * This is the model class for table "{{%forecasts}}".
+ *  * This is the model class for table "{{%forecasts}}".
  *
  * @property string $id
  * @property integer $id_game
@@ -98,6 +98,8 @@ class Forecasts extends ActiveRecord
      * @param $game
      * @param $scoreHome
      * @param $scoreGuest
+     * @var $forecasts Forecasts
+     * @var $forecast Forecasts
      */
     public static function setForecastPoints($game, $scoreHome, $scoreGuest) {
 
@@ -108,13 +110,12 @@ class Forecasts extends ActiveRecord
         }
     }
 
-    //calculate forecast points
     /**
      * @param $scoreHome
      * @param $scoreGuest
      * @return int
      */
-    protected function forecastPoints($scoreHome, $scoreGuest) {
+    private function forecastPoints($scoreHome, $scoreGuest) {
         if($scoreHome == NULL or $scoreGuest == NULL) return 0;
         if(($this->fscore_home == $scoreHome) and ($this->fscore_guest == $scoreGuest)) return $this->points = 3;
         if(($this->fscore_home - $this->fscore_guest) == ($scoreHome - $scoreGuest)) return $this->points = 2;
@@ -250,6 +251,12 @@ class Forecasts extends ActiveRecord
     }
 
     //getting the list of games per tour for user with forecast status
+    /**
+     * @param $tour
+     * @param $tournament
+     * @param $user
+     * @return array
+     */
     public static function getTourUserForecastStatus($tour, $tournament, $user) {
 
         //getting the games for the tournament and tour
