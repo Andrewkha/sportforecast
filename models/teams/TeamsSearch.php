@@ -10,7 +10,7 @@ use app\models\teams\Teams;
 /**
  * TeamsSearch represents the model behind the search form about `app\models\teams\teams`.
  */
-class TeamsSearch extends teams
+class TeamsSearch extends Teams
 {
     /**
      * @inheritdoc

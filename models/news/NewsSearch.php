@@ -9,7 +9,7 @@ use yii\data\ActiveDataProvider;
 /**
  * NewsSearch represents the model behind the search form about `app\models\news\news`.
  */
-class NewsSearch extends news
+class NewsSearch extends News
 {
     /**
      * @inheritdoc

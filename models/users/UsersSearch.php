@@ -10,7 +10,7 @@ use app\models\users\Users;
 /**
  * UsersSearch represents the model behind the search form about `app\models\users\users`.
  */
-class UsersSearch extends users
+class UsersSearch extends Users
 {
     /**
      * @inheritdoc

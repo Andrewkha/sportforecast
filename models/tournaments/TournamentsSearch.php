@@ -11,7 +11,7 @@ use yii\data\Sort;
 /**
  * TournamentsSearch represents the model behind the search form about `app\models\tournaments\tournaments`.
  */
-class TournamentsSearch extends tournaments
+class TournamentsSearch extends Tournaments
 {
     /**
      * @inheritdoc
