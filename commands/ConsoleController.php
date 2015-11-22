@@ -48,23 +48,6 @@ class ConsoleController extends Controller
         return 0;
     }
 
-    public function actionAutoprocesstest() {
-
-        $tournaments = Tournaments::find()->where(['id_tournament' => 12])->all();
-
-        foreach($tournaments as $one) {
-
-            try {
-                $one->autoProcess();
-            } catch (Exception $e) {
-                Yii::error($one->tournament_name.' '.$e->getMessage(), 'console');
-                continue;
-            }
-            Yii::info("Task Autoprocess for $one->tournament_name has been executed", 'console');
-        }
-
-        return 0;
-    }
 
     //autoReminder
     //gel list of active tournaments
