@@ -125,6 +125,7 @@ class Games extends ActiveRecord
 
             return true;
         } else {
+
             return false;
         }
     }

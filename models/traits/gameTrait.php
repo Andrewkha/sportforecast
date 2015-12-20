@@ -141,8 +141,8 @@ trait gameTrait
             ->orWhere(['in', 'id_team_guest', $id_teams])
             ->andWhere(['>=', 'date_time_game', time()])
             ->with('idTeamHome.idTeam', 'idTeamGuest.idTeam')
-            ->orderBy(['tour' =>  SORT_ASC])
-            ->addOrderBy(['date_time_game' => SORT_ASC])
+            ->orderBy(['date_time_game' =>  SORT_ASC])
+            ->addOrderBy(['tour' => SORT_ASC])
             ->limit((int)ceil($trn->num_tours / 2) + 1)
             ->all();
 
