@@ -8,7 +8,7 @@ use kartik\widgets\Alert;
 /* @var $searchModel app\models\countries\CountriesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Журнал';
+$this->title = 'Журнал автопроцессинга';
 $this->params['breadcrumbs'][] = ['label' => 'Справочники', 'url' => ['/admin']];
 $this->params['breadcrumbs'][] = $this->title;
 

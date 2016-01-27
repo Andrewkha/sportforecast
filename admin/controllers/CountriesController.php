@@ -31,6 +31,7 @@ class CountriesController extends Controller
      * Lists all countries models.
      * @return mixed
      */
+    // Index
     public function actionIndex()
     {
         Yii::$app->user->returnUrl = Yii::$app->request->url;
