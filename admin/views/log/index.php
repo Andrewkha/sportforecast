@@ -22,6 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="row">
             <?= GridView::widget([
             'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
             'options' => [
                 'class' => 'col-xs-12 col-md-10 col-lg-8'
             ],
@@ -58,6 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'headerOptions' => [
                         'style' => 'text-align:center',
                     ],
+                    'filter' => false,
                 ],
 
                 [
@@ -68,6 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'options' => [
                         'class' => 'col-xs-2',
                     ],
+                    'filter' => $typeFilter,
                 ],
 
                 [
@@ -75,6 +78,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'options' => [
                         'class' => 'col-xs-7',
                     ],
+                    'filter' => false
                 ],
             ],
         ]); ?>
