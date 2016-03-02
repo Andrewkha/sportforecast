@@ -36,6 +36,7 @@ class LogController extends Controller
                 'defaultOrder' => ['log_time' => SORT_DESC]
             ]
         ]);
+
         return $this->render('index', ['dataProvider' => $dataProvider, 'searchModel' => $searchModel, 'typeFilter' => $typeFilter]);
     }
 }

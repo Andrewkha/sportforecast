@@ -55,11 +55,12 @@ class users extends \yii\db\ActiveRecord implements IdentityInterface
     public function behaviors() {
 
         return [
-            [
-                'class' => TimestampBehavior::className(),
-                'createdAtAttribute' => 'created_on',
-                'updatedAtAttribute' => 'updated_on',
-            ],
+            'TimestampBehavior' =>
+                [
+                    'class' => TimestampBehavior::className(),
+                    'createdAtAttribute' => 'created_on',
+                    'updatedAtAttribute' => 'updated_on',
+                ],
             'fileUpload' =>
                 [
                     'class' => fileUploadBehavior::className(),
@@ -104,6 +105,7 @@ class users extends \yii\db\ActiveRecord implements IdentityInterface
             'email' => 'Email',
             'forgotten_password_code' => 'Forgotten Password Code',
             'created_on' => 'Дата регистрации',
+            'updated_on' => 'Дата изменения',
             'last_login' => 'Последний вход',
             'active' => 'Статус',
             'first_name' => 'Имя',

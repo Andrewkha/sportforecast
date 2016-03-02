@@ -4,6 +4,7 @@ namespace app\models\users;
 
 use Yii;
 use yii\base\Model;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * LoginForm is the model behind the login form.
@@ -84,9 +85,13 @@ class LoginForm extends Model
     {
         if ($this->validate()) {
             $user = $this->getUser($this->username);
-            $user->last_login = time();
-            $user->save();
-            return Yii::$app->user->login($this->_user, $this->rememberMe ? 3600*24*7 : 0);
+
+            Yii::$app->user->on(\yii\web\User::EVENT_AFTER_LOGIN, function($event) {
+                $event->identity->last_login = time();
+                $event->identity->detachBehavior('TimestampBehavior');
+                $event->identity->save();
+            });
+            return Yii::$app->user->login($user, $this->rememberMe ? 3600*24*7 : 0);
         } else {
             return false;
         }

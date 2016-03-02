@@ -21,7 +21,9 @@ use yii\grid\GridView;
 
             <?= $form->field($model, 'created_on')->textInput(['value' => date('d/m/Y',$model->created_on), 'disabled' => true]) ?>
 
-            <?= $form->field($model, 'last_login')->textInput(['value' => date('d/m/Y',$model->last_login), 'disabled' => true]) ?>
+            <?= $form->field($model, 'last_login')->textInput(['value' => date('d/m/Y H:i',$model->last_login), 'disabled' => true]) ?>
+
+            <?= $form->field($model, 'updated_on')->textInput(['value' => date('d/m/Y H:i',$model->updated_on), 'disabled' => true]) ?>
 
             <div class="row">
                 <?= $form->field($model, 'active', [
