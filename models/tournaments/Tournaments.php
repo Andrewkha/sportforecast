@@ -184,9 +184,16 @@ class Tournaments extends \yii\db\ActiveRecord
             }
         }
 
+        //all future games and previous where score is null
         $gamesFromDB = Games::find()
             ->where(['or',['in', 'id_team_home', $teamIDs], ['in', 'id_team_guest', $teamIDs]])
-            ->andWhere(['>', 'date_time_game', time() - 60*60*24*7])
+            ->andWhere(['or',
+                ['>', 'date_time_game', time()],
+                ['and',
+                    ['<', 'date_time_game', time()],
+                    ['or', ['score_home' => null],['score_guest' => null]]
+                ],
+            ])
             ->all();
 
         /*matching web data with DB data. for those that matches found:
