@@ -89,6 +89,8 @@ class LoginForm extends Model
             Yii::$app->user->on(\yii\web\User::EVENT_AFTER_LOGIN, function($event) {
                 $event->identity->last_login = time();
                 $event->identity->detachBehavior('TimestampBehavior');
+                //$event->identity->updatedAtAttribute = 'last_login';
+                //print_r($event->identity); exit;
                 $event->identity->save();
             });
             return Yii::$app->user->login($user, $this->rememberMe ? 3600*24*7 : 0);

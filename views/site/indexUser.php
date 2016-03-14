@@ -158,7 +158,7 @@ $this->title = 'Сайт спортивных прогнозов';
                                 ]);
                                 ?>
                                 <?php $content .= "<p class = 'text-right'>".Html::submitButton('Сохранить',['class' => 'btn btn-success', 'form' => $form->getId()])."</p>";?>
-                            <?php //ActiveForm::end();?>
+                            <?php ActiveForm::end();?>
                             <?php $content .="</form>"?>
                         <?php endforeach;?>
 
