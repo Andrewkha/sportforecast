@@ -11,7 +11,9 @@ use yii\base\Exception;
 use yii\console\Controller;
 use Yii;
 use app\models\tournaments\Tournaments;
+use app\models\tournaments\TeamTournaments;
 use app\models\result\Result;
+use app\models\games\Games;
 use app\models\reminders\Reminders;
 use yii\helpers\ArrayHelper;
 
@@ -46,6 +48,35 @@ class ConsoleController extends Controller
         }
 
         return 0;
+    }
+
+    public function actionGetNull()
+    {
+
+        $tournaments = Tournaments::getAutoprocessTournaments();
+
+        foreach($tournaments as $one)
+        {
+            $teamTournament = TeamTournaments::find()
+                ->where(['id_tournament' => $one->id_tournament])
+                ->all();
+
+            //getting Participant IDs for the tournament
+
+            $teamIDs = ArrayHelper::getColumn($teamTournament, 'id');
+
+            $games = Games::find()
+                ->where(['or',['in', 'id_team_home', $teamIDs], ['in', 'id_team_guest', $teamIDs]])
+                ->andWhere(
+                    ['and',
+                        ['or', ['not', ['score_home' => null]],['not', ['score_guest' => null]]],
+                        ['or', ['points_home' => null],['points_guest' => null]]
+                    ]
+                )
+                ->all();
+
+            print_r($games);
+        }
     }
 
 
