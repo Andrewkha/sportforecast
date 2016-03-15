@@ -55,6 +55,7 @@ class ConsoleController extends Controller
 
         $tournaments = Tournaments::getAutoprocessTournaments();
 
+        $games = [];
         foreach($tournaments as $one)
         {
             $teamTournament = TeamTournaments::find()
@@ -65,7 +66,7 @@ class ConsoleController extends Controller
 
             $teamIDs = ArrayHelper::getColumn($teamTournament, 'id');
 
-            $games = Games::find()
+            $games = ArrayHelper::merge($games, Games::find()
                 ->where(['or',['in', 'id_team_home', $teamIDs], ['in', 'id_team_guest', $teamIDs]])
                 ->andWhere(
                     ['and',
@@ -73,10 +74,26 @@ class ConsoleController extends Controller
                         ['or', ['points_home' => null],['points_guest' => null]]
                     ]
                 )
-                ->all();
-
-            print_r($games);
+                ->all()
+            );
         }
+
+        if(!empty($games))
+        {
+            $msg = '';
+            foreach($games as $one)
+            {
+                $msg .= 'Issue with game ID: '.$one->id_game.', '.$one->competitors.', tour '.$one->tour.', tournament '.$one->tournament."\n\r";
+            }
+
+            Yii::error($msg, 'console');
+        }
+            else
+        {
+            Yii::info('No games missed', 'console');
+        }
+
+        return 0;
     }
 
 

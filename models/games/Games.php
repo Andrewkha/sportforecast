@@ -87,6 +87,11 @@ class Games extends ActiveRecord
         return $this->idTeamHome->idTeam->team_name." - ".$this->idTeamGuest->idTeam->team_name;
     }
 
+    public function getTournament()
+    {
+        return Result::findOne(['id_game' => $this->id_game])->tournament_name;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
