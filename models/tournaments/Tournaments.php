@@ -149,7 +149,7 @@ class Tournaments extends \yii\db\ActiveRecord
         $teamIDs = ArrayHelper::getColumn($teamTournament, 'id');
 
         $url = $this->autoProcessURL;
-        //$url = 'web/pl.html';
+        //$url = 'pl.html';
 
         $html = new simple_html_dom();
 
@@ -166,7 +166,12 @@ class Tournaments extends \yii\db\ActiveRecord
 
             foreach($resultTable->find('tbody tr') as $k => $one) {
 
-                 if($k != 0 && $this->autoTimeToUnix($one->find('td.name-td')[0]->plaintext) > time() - 60*60*24*7) {
+                 if($k != 0
+                    && (($this->autoTimeToUnix($one->find('td.name-td')[0]->plaintext) > time())
+                            || ($this->autoTimeToUnix($one->find('td.name-td')[0]->plaintext) < time() && (trim(stristr($one->find('td.score-td noindex')[0]->plaintext, ':', true)) == '-'))
+                        )
+                    )
+                 {
 
                     if(isset($aliases[$one->find('td.owner-td a.player')[0]->plaintext]) && isset($aliases[$one->find('td.guests-td a.player')[0]->plaintext])) {
 
