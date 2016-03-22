@@ -166,11 +166,7 @@ class Tournaments extends \yii\db\ActiveRecord
 
             foreach($resultTable->find('tbody tr') as $k => $one) {
 
-                 if($k != 0
-                    && (($this->autoTimeToUnix($one->find('td.name-td')[0]->plaintext) > time())
-                            || ($this->autoTimeToUnix($one->find('td.name-td')[0]->plaintext) < time() && (trim(stristr($one->find('td.score-td noindex')[0]->plaintext, ':', true)) == '-'))
-                        )
-                    )
+                 if($k != 0 && (($this->autoTimeToUnix($one->find('td.name-td')[0]->plaintext) > time() - 60*60*24*7*2)))
                  {
 
                     if(isset($aliases[$one->find('td.owner-td a.player')[0]->plaintext]) && isset($aliases[$one->find('td.guests-td a.player')[0]->plaintext])) {
@@ -240,11 +236,21 @@ class Tournaments extends \yii\db\ActiveRecord
 
             $newGame = new Games();
 
-            foreach($gameWeb as $attribute) {
+            foreach($gameWeb as $k => $attribute) {
 
-                $newGame->$attribute = $gameWeb[$attribute];
+                $newGame->$k = $attribute;
             }
-            $newGame->save(false);
+
+            if(!Games::find()
+                ->where(['tour' => $newGame->tour])
+                ->andWhere(['id_team_home' => $newGame->id_team_home])
+                ->andWhere(['id_team_guest' => $newGame->id_team_guest])
+                ->exists()
+            )
+            {
+                $newGame->save(false);
+            }
+
         }
 
         return true;
