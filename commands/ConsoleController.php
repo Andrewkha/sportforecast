@@ -50,6 +50,31 @@ class ConsoleController extends Controller
         return 0;
     }
 
+
+    /**
+     * get games with null score but not null points
+     */
+    public function actionGetNullPoints()
+    {
+        $games = Games::find()
+            ->where(['score_home' => null])
+            ->andWhere(['not',['points_home' => null]]);
+        if(!$games->exists())
+        {
+            Yii::info('No games with null score but with positive points', 'console');
+        }
+            else
+        {
+            $gamesFound = $games->all();
+            $this->getErrorMessage($gamesFound);
+        }
+
+        return 0;
+    }
+    /**
+     * Finds games with empty points but with not empty score
+     * @return int
+     */
     public function actionGetNull()
     {
 
@@ -80,20 +105,25 @@ class ConsoleController extends Controller
 
         if(!empty($games))
         {
-            $msg = '';
-            foreach($games as $one)
-            {
-                $msg .= 'Issue with game ID: '.$one->id_game.', '.$one->competitors.', tour '.$one->tour.', tournament '.$one->tournament."\n\r";
-            }
-
-            Yii::error($msg, 'console');
+            $this->getErrorMessage($games);
         }
             else
         {
-            Yii::info('No games missed', 'console');
+            Yii::info('No games with score but with no points', 'console');
         }
 
         return 0;
+    }
+
+    private function getErrorMessage($games)
+    {
+        $msg = '';
+        foreach($games as $one)
+        {
+            $msg .= 'Issue with game ID: '.$one->id_game.', '.$one->competitors.', tour '.$one->tour.', tournament '.$one->tournament."\n\r";
+        }
+
+        Yii::error($msg, 'console');
     }
 
 
