@@ -205,9 +205,11 @@ class Games extends ActiveRecord
             }
             $this->points_home = 0;
             $this->points_guest = 3;
+            return;
         } else {
             $this->points_home = NULL;
             $this->points_guest = NULL;
+            return;
         }
     }
 
