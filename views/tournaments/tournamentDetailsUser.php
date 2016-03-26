@@ -16,7 +16,7 @@ ModalAsset::register($this);
 /* @var $this yii\web\View */
 
 $this->title = $tournament->tournament_name;
-$this->params['breadcrumbs'][] = ['label' => 'Турниры', 'url' => 'tournaments'];
+$this->params['breadcrumbs'][] = ['label' => 'Турниры', 'url' => '/tournaments'];
 $this->params['breadcrumbs'][] = $tournament->tournament_name;
 ?>
 
