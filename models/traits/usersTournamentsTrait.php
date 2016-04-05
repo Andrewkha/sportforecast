@@ -165,6 +165,15 @@ trait usersTournamentsTrait
         return $tournaments;
     }
 
+    public static function getTournamentsUserParticipates($user)
+    {
+        $tournaments = self::find()
+            ->where(['id_user' => $user])
+            ->all();
+
+        return $tournaments;
+    }
+
     public static function isUserParticipate($user, $tournament) {
 
         return self::find()
