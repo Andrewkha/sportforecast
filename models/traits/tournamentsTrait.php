@@ -103,7 +103,7 @@ trait tournamentsTrait
     //get list of all tournaments where user doesn't participate with leader info
     public static function getAllTournamentsNotParticipate($user) {
 
-        $participates = UsersTournaments::getAllUserTournamentsAndPosition($user);
+        $participates = UsersTournaments::getTournamentsUserParticipates($user);
 
         $tournaments = self::find()
             ->with(['country0'])
