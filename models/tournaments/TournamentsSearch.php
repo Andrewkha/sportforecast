@@ -43,7 +43,8 @@ class TournamentsSearch extends Tournaments
 
     public function search($params)
     {
-        $query = Tournaments::find();
+        $query = Tournaments::find()
+            ->with('country0');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
