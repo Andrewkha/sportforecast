@@ -41,7 +41,8 @@ class TeamsSearch extends Teams
      */
     public function search($params)
     {
-        $query = teams::find();
+        $query = teams::find()
+            ->with('country0');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
