@@ -28,7 +28,8 @@
         "phpoffice/phpexcel": "~1.8",
         "letyii/yii2-tinymce": "dev-master",
         "bower-asset/html5shiv": "*",
-        "bower-asset/respond": "*"
+        "bower-asset/respond": "*",
+        "imangazaliev/didom": "^1.6"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

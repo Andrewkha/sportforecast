@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "914ac5a5c215437f83d443a3ee0308a5",
-    "content-hash": "432251d32f5963ca08047e21b1bb5847",
+    "hash": "cc133a80be30b5da970747eed9e6fa84",
+    "content-hash": "197bcae156e6cb4f815f9637b84028ad",
     "packages": [
         {
             "name": "2amigos/yii2-date-time-picker-widget",
@@ -447,6 +447,52 @@
             "time": "2013-11-30 08:25:19"
         },
         {
+            "name": "imangazaliev/didom",
+            "version": "1.6.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Imangazaliev/DiDOM.git",
+                "reference": "ed05fe78537cef9dc00f462e8b6fe6aeccc775d4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Imangazaliev/DiDOM/zipball/ed05fe78537cef9dc00f462e8b6fe6aeccc775d4",
+                "reference": "ed05fe78537cef9dc00f462e8b6fe6aeccc775d4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DiDom\\": "src/DiDom/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Imangazaliev Muhammad",
+                    "email": "imangazalievm@gmail.com"
+                }
+            ],
+            "description": "Simple and fast HTML parser",
+            "homepage": "https://github.com/Imangazaliev/DiDOM",
+            "keywords": [
+                "didom",
+                "html",
+                "parser",
+                "xml"
+            ],
+            "time": "2016-04-07 02:11:19"
+        },
+        {
             "name": "kartik-v/bootstrap-fileinput",
             "version": "v4.3.0",
             "source": {
@@ -778,7 +824,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/574c0e310bda692253c1ba0eac9a94c699b299d5",
+                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/fe29bcf8f46bde42aa3eb067851b38dc07cd4d8a",
                 "reference": "574c0e310bda692253c1ba0eac9a94c699b299d5",
                 "shasum": ""
             },
@@ -827,7 +873,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-helpers/zipball/54262f6a450914f599f71e393c8592676f0fed24",
+                "url": "https://api.github.com/repos/kartik-v/yii2-helpers/zipball/e2ba2a2435b65e5ff808a2ccf46d9963f46a254f",
                 "reference": "54262f6a450914f599f71e393c8592676f0fed24",
                 "shasum": ""
             },
