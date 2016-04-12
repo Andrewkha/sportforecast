@@ -8,9 +8,9 @@ use app\models\news\News;
 use app\models\users\UsersTournaments;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
-use simple_html_dom;
 use Yii;
 use app\models\traits\tournamentsTrait;
+use DiDom\Document;
 
 /**
  * This is the model class for table "{{%tournaments}}".
@@ -135,8 +135,8 @@ class Tournaments extends \yii\db\ActiveRecord
         ];
     }
 
-    public function autoProcess() {
-
+    public function autoProcess()
+    {
         $teamTournament = TeamTournaments::find()
             ->where(['id_tournament' => $this->id_tournament])
             ->all();
@@ -150,36 +150,35 @@ class Tournaments extends \yii\db\ActiveRecord
 
         $url = $this->autoProcessURL;
         //$url = 'pl.html';
+        $html = new Document($url, true);
 
-        $html = new simple_html_dom();
-
-        $html->load_file($url);
         $count = $this->num_tours;
         $j = 0;
 
         $gamesFromWeb = [];
+
         for($i = 0; $i < $count; $i++) {
 
-            $tour = $html->find('h3.titleH3', $i)->plaintext;
+            $tour = $html->find('h3.titleH3')[$i]->text();
 
-            $resultTable = $html->find('table.stat-table', $i);
+
+            $resultTable = $html->find('table.stat-table')[$i];
 
             foreach($resultTable->find('tbody tr') as $k => $one) {
 
-                 if($k != 0 && (($this->autoTimeToUnix($one->find('td.name-td')[0]->plaintext) > time() - 60*60*24*7*2)))
-                 {
+                if((($this->autoTimeToUnix($one->find('td.name-td')[0]->text()) > time() - 60*60*24*7*2)))
+                {
+                    if(isset($aliases[$one->find('td.owner-td a.player')[0]->text()]) && isset($aliases[$one->find('td.guests-td a.player')[0]->text()])) {
 
-                    if(isset($aliases[$one->find('td.owner-td a.player')[0]->plaintext]) && isset($aliases[$one->find('td.guests-td a.player')[0]->plaintext])) {
-
-                        $gamesFromWeb[$j]['id_team_home'] = (int)$aliases[$one->find('td.owner-td a.player')[0]->plaintext];
-                        $gamesFromWeb[$j]['id_team_guest'] = (int)$aliases[$one->find('td.guests-td a.player')[0]->plaintext];
-                        $gamesFromWeb[$j]['date_time_game'] = (int)$this->autoTimeToUnix($one->find('td.name-td')[0]->plaintext);
+                        $gamesFromWeb[$j]['id_team_home'] = (int)$aliases[$one->find('td.owner-td a.player')[0]->text()];
+                        $gamesFromWeb[$j]['id_team_guest'] = (int)$aliases[$one->find('td.guests-td a.player')[0]->text()];
+                        $gamesFromWeb[$j]['date_time_game'] = (int)$this->autoTimeToUnix($one->find('td.name-td')[0]->text());
                         $gamesFromWeb[$j]['tour'] = (int)trim($tour, "-ый тур");
-                        $gamesFromWeb[$j]['score_home'] = (int)(trim(stristr($one->find('td.score-td noindex')[0]->plaintext, ':', true)) == '-') ? NULL : trim(stristr($one->find('td.score-td noindex')[0]->plaintext, ':', true));
-                        $gamesFromWeb[$j]['score_guest'] = (int)(trim(trim(stristr($one->find('td.score-td noindex')[0]->plaintext, ':'), "\t\n\r\0\x0B\x3A")) == '-') ? NULL : trim(trim(stristr($one->find('td.score-td noindex')[0]->plaintext, ':'), "\t\n\r\0\x0B\x3A"));
+                        $gamesFromWeb[$j]['score_home'] = (int)(trim(stristr($one->find('td.score-td noindex')[0]->text(), ':', true)) == '-') ? NULL : trim(stristr($one->find('td.score-td noindex')[0]->text(), ':', true));
+                        $gamesFromWeb[$j]['score_guest'] = (int)(trim(trim(stristr($one->find('td.score-td noindex')[0]->text(), ':'), "\t\n\r\0\x0B\x3A")) == '-') ? NULL : trim(trim(stristr($one->find('td.score-td noindex')[0]->text(), ':'), "\t\n\r\0\x0B\x3A"));
                         $j++;
                     } else {
-                        throw new Exception('Error during alias parsing '.$one->find('td.owner-td a.player')[0]->plaintext.' or '.$one->find('td.guests-td a.player')[0]->plaintext);
+                        throw new Exception('Error during alias parsing '.$one->find('td.owner-td a.player')[0]->text().' or '.$one->find('td.guests-td a.player')[0]->text());
                     }
                 }
             }
