@@ -3,6 +3,7 @@
 namespace app\models\teams;
 
 use app\components\fileUploadBehavior;
+use app\models\tournaments\Tournaments;
 use Yii;
 use app\models\countries\Countries;
 use app\models\tournaments\TeamTournaments;
@@ -77,6 +78,11 @@ class Teams extends \yii\db\ActiveRecord
     public function getTeamTournaments()
     {
         return $this->hasMany(TeamTournaments::className(), ['id_team' => 'id_team']);
+    }
+
+    public function getTournaments()
+    {
+        return $this->hasMany(Tournaments::className(), ['id_tournament' => 'id_tournament'])->viaTable('{{%team_tournaments}}', ['id_team' => 'id_team']);
     }
 
     /**

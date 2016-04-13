@@ -5,6 +5,7 @@ namespace app\models\tournaments;
 
 use app\models\games\Games;
 use app\models\news\News;
+use app\models\teams\Teams;
 use app\models\users\UsersTournaments;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
@@ -103,6 +104,11 @@ class Tournaments extends \yii\db\ActiveRecord
     public function getTeamTournaments()
     {
         return $this->hasMany(TeamTournaments::className(), ['id_tournament' => 'id_tournament']);
+    }
+
+    public function getTeams()
+    {
+        return $this->hasMany(\app\models\teams\Teams::className(), ['id_team' => 'id_team'])->viaTable('{{%team_tournaments}}', ['id_tournament' => 'id_tournament']);
     }
 
     /**

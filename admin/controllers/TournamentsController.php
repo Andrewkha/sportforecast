@@ -138,13 +138,18 @@ class TournamentsController extends Controller
     public function actionAddParticipants() {
 
         $candidates = Yii::$app->request->post('candidates');
+
         if(!$candidates)
             return $this->goBack();
-        $tournament = Yii::$app->request->post('tournament');
-        foreach($candidates as $candidate) {
+        
+        $participants = Teams::find()
+            ->where(['in', 'id_team', $candidates])
+            ->all();
 
-            $participant = new TeamTournaments();
-            $participant->addParticipant($candidate, $tournament);
+        $tournament = Tournaments::findOne(Yii::$app->request->post('tournament'));
+        foreach($participants as $one) {
+
+            $one->link('tournaments', $tournament);
         }
 
         return $this->goBack();
