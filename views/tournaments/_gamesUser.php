@@ -22,9 +22,10 @@ use app\models\games\Games;
 
 <?php $count = 0;?>
 
+<?php $unfinishedTours = Games::listOfUnfinishedTours($tournament->id_tournament);?>
 <?php foreach($tourGames as $tour=> $games):?>
 <div class="col-xs-12 col-sm-10 col-lg-6">
-    <?php if(Games::isTourFinished($tournament->id_tournament, $tour)) :?>
+    <?php if(!in_array($tour, $unfinishedTours)) :?>
         <?= GridView::widget([
             'dataProvider' => $tourGames[$tour],
             'responsive' => false,

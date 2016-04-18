@@ -489,6 +489,25 @@ trait gameTrait
 
     }
 
+    public static function listOfUnfinishedTours($tournament)
+    {
+        $gamesIdForTourTournament = ArrayHelper::getColumn(Result::find()
+            ->select(['id_game'])
+            ->andWhere(['id_tournament' => $tournament])
+            ->all(),
+            'id_game');
+
+        if(empty($gamesIdForTourTournament))
+            return [];
+
+        $tours = array_unique(array_keys(self::find()
+            ->where(['in', 'id_game', $gamesIdForTourTournament])
+            ->andWhere(['or', ['score_home' => null], ['score_guest' => null]])
+            ->indexBy('tour')
+            ->all()));
+
+        return $tours;
+    }
     //checking if the tour finished
     public static function isTourFinished($tournament, $tour) {
 
