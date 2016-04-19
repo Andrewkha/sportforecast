@@ -139,16 +139,15 @@ class Games extends ActiveRecord
 
         parent::afterSave($insert, $changedAttributes);
 
-        //updating the forecast points for the game
-        if(!$insert) {
-
-            Forecasts::setForecastPoints($this->id_game, $this->score_home, $this->score_guest);
-        }
-
         //getting the tournament number
         $tournament = ArrayHelper::getValue(Result::find()
             ->where(['id_game' => $this->id_game])
             ->one(), 'id_tournament');
+
+        //updating the forecast points for the game
+        if(!$insert) {
+            Forecasts::setForecastPoints($this->id_game, $this->score_home, $this->score_guest, $tournament);
+        }
 
         //if tour finished, need to send notifications (if not already sent) and put tournament as finished if it was last tour
 

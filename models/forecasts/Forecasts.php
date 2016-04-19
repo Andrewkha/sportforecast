@@ -101,12 +101,18 @@ class Forecasts extends ActiveRecord
      * @var $forecasts Forecasts
      * @var $forecast Forecasts
      */
-    public static function setForecastPoints($game, $scoreHome, $scoreGuest) {
+    public static function setForecastPoints($game, $scoreHome, $scoreGuest, $tournament) {
 
         $forecasts = self::find()->where(['id_game' => $game])->all();
         foreach($forecasts as $forecast) {
-            if($forecast->forecastPoints($scoreHome, $scoreGuest) !== false)
-                $forecast->save(false);
+            $oldPoints = $forecast->points;
+
+            $forecast->forecastPoints($scoreHome, $scoreGuest);
+            $forecast->save(false);
+
+            $userTournament = UsersTournaments::findOne(['id_tournament' => $tournament, 'id_user' => $forecast->id_user]);
+            $userTournament->points = $userTournament->points - $oldPoints + $forecast->points;
+            $userTournament->save(false);
         }
     }
 
@@ -116,7 +122,7 @@ class Forecasts extends ActiveRecord
      * @return int
      */
     private function forecastPoints($scoreHome, $scoreGuest) {
-        if($scoreHome == NULL or $scoreGuest == NULL) return 0;
+
         if(($this->fscore_home == $scoreHome) and ($this->fscore_guest == $scoreGuest)) return $this->points = 3;
         if(($this->fscore_home - $this->fscore_guest) == ($scoreHome - $scoreGuest)) return $this->points = 2;
         if((($this->fscore_home - $this->fscore_guest) > 0 and ($scoreHome - $scoreGuest) > 0) OR ((($this->fscore_home - $this->fscore_guest) < 0 and ($scoreHome - $scoreGuest) < 0))) return $this->points = 1;
