@@ -64,6 +64,7 @@ trait tournamentsTrait
 
     //getting the list of the forecasters for the tournament. Both with forecasts and with no
 
+    //todo rewrite after adding points to users_tournaments
     public function getForecastersList() {
 
         $forecasters1 = Forecasts::getForecastersWithPoints($this->id_tournament);

@@ -194,7 +194,6 @@ class TournamentsController extends Controller{
 
     public function actionGames($id) {
 
-        //todo if logged in - with forecast
         $games = new ArrayDataProvider([
             'allModels' => Result::getParticipantGames($id),
             'pagination' => false,
