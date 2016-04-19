@@ -46,7 +46,7 @@ Modal::end();
 
         [
             'header' => 'Пользователь',
-            'attribute' => "name",
+            'attribute' => "idUser.username",
             'vAlign' => 'middle',
             'options' => [
                 'class' => 'col-xs-9',
@@ -55,10 +55,10 @@ Modal::end();
             'headerOptions' => [
                 'style' => 'text-align:center',
             ],
-            'content' => function($model) use ($tournament){
+            'content' => function($model){
 
-                return Html::img(Users::getPath().'/'.$model['avatar'], ['height' => '30']).Html::button($model['name'], [
-                    'value' => Url::to(['tournaments/user', 'user' => $model['id_user'], 'tournament' => $tournament->id_tournament]),
+                return Html::img(Users::getPath().'/'.$model->idUser->avatar, ['height' => '30']).Html::button($model->idUser->username, [
+                    'value' => Url::to(['tournaments/user', 'user' => $model->id_user, 'tournament' => $model->id_tournament]),
                     'class' => 'btn btn-link modalUser']);
             }
         ],
@@ -71,6 +71,9 @@ Modal::end();
                 'class' => 'col-xs-1',
             ],
             'hAlign' => 'center',
+            'content' => function($model){
+                return ($model->points === NULL)? '-' : $model->points;
+            },
             'headerOptions' => [
                 'style' => 'text-align:center',
             ],

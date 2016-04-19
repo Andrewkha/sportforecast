@@ -2,6 +2,7 @@
 
 namespace app\models\users;
 
+use app\models\query\UsersTournamentsQuery;
 use Yii;
 use app\models\tournaments\Tournaments;
 use app\models\result\Result;
@@ -100,6 +101,15 @@ class UsersTournaments extends \yii\db\ActiveRecord
 
         $statuses = self::getSubscription();
         return isset($statuses[$this->notification])? $statuses[$this->notification] : '';
+    }
+
+    /**
+     * @inheritdoc
+     * @return UsersTournamentsQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new UsersTournamentsQuery(get_called_class());
     }
 
     public function deleteForecasts() {

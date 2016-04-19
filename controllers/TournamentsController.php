@@ -21,6 +21,7 @@ use app\models\result\Result;
 use app\models\games\Games;
 use yii\filters\AccessControl;
 use yii\data\ArrayDataProvider;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\helpers\ArrayHelper;
 use yii\filters\VerbFilter;
@@ -154,12 +155,10 @@ class TournamentsController extends Controller{
         for($i =1 ; $i <= $tournament->num_tours; $i++)
             $tour_list[$i] = "$i тур";
 
-        $forecasters = new ArrayDataProvider([
-            'allModels' => $tournament->getForecastersList(),
+        $forecasters = new ActiveDataProvider([
+            'query' => UsersTournaments::find()->forecastersStandings($id),
             'pagination' => false,
-            'pagination' => [
-                'pageSize' => 10,
-            ]
+
         ]);
 
         //if guest or not participating in the tournament
