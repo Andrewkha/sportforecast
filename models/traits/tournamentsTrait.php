@@ -128,24 +128,10 @@ trait tournamentsTrait
 
         if(!empty($tournaments))
         {
-            $query = [];
-            foreach ($tournaments as $one)
-                $query[] = UsersTournaments::find()
-                    ->where(['id_tournament' => $one])
-                    ->orderBy(['points' => SORT_DESC])
-                    ->with('idTournament')
-                    ->with('idUser')
-                    ->limit(1);
-
-            $count = count($query);
-
-            $toExecute = $query[0];
-            for($i = 0; $i < $count - 1; $i++)
-                $toExecute = $toExecute->union($query[$i + 1]);
-
-            return $toExecute->asArray()->all();
+            return self::unionQueryPrep($tournaments);
         } else
             return [];
+
     }
 
     //get list of active and pending tournaments where user doesn't participate with leader info
@@ -160,25 +146,47 @@ trait tournamentsTrait
 
         if(!empty($tournaments))
         {
-            $query = [];
-            foreach ($tournaments as $one)
-                $query[] = UsersTournaments::find()
-                    ->where(['id_tournament' => $one])
-                    ->orderBy(['points' => SORT_DESC])
-                    ->with('idTournament')
-                    ->with('idUser')
-                    ->limit(1);
-
-            $count = count($query);
-
-            $toExecute = $query[0];
-            for($i = 0; $i < $count - 1; $i++)
-                $toExecute = $toExecute->union($query[$i + 1]);
-
-            return $toExecute->asArray()->all();
+            return self::unionQueryPrep($tournaments);
         } else
             return [];
 
+    }
+
+    //get list of all where user doesn't participate with leader info
+    public static function getAllTournamentsUserNotParticipate($user) {
+
+        $participates = UsersTournaments::getTournamentsUserParticipates($user);
+
+        $tournaments = self::find()
+            ->andWhere(['not', ['id_tournament' => ArrayHelper::getColumn($participates, 'id_tournament')]])
+            ->column();
+
+        if(!empty($tournaments))
+        {
+            return self::unionQueryPrep($tournaments);
+        } else
+            return [];
+
+    }
+
+    private static function unionQueryPrep($array)
+    {
+        $query = [];
+        foreach ($array as $one)
+            $query[] = UsersTournaments::find()
+                ->where(['id_tournament' => $one])
+                ->orderBy(['points' => SORT_DESC])
+                ->with('idTournament.country0')
+                ->with('idUser')
+                ->limit(1);
+
+        $count = count($query);
+
+        $toExecute = $query[0];
+        for($i = 0; $i < $count - 1; $i++)
+            $toExecute = $toExecute->union($query[$i + 1]);
+
+        return $toExecute->asArray()->all();
     }
 
     private static function leaderAndPointsAssignment($tournaments) {

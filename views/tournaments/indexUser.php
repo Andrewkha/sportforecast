@@ -388,7 +388,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'class' => 'col-xs-3'
                         ],
                         'content' => function($model) {
-                            return Html::a($model['tournament_name'], ['tournaments/details', 'id' => $model['id_tournament']]);
+                            return Html::a($model['idTournament']['tournament_name'], ['tournaments/details', 'id' => $model['id_tournament']]);
                         },
 
                         'format' => 'url',
@@ -404,7 +404,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'style' => 'text-align:center',
                         ],
                         'content' => function($model) {
-                            return $model['country0']['country'];
+                            return $model['idTournament']['country0']['country'];
                         },
 
                         'options' => [
@@ -415,7 +415,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'header' => 'Статус',
                         'content' => function($model) {
-                            return Tournaments::statuses()[$model['is_active']];
+                            return Tournaments::statuses()[$model['idTournament']['is_active']];
                         },
                         'options' => [
                             'class' => 'col-xs-2'
@@ -442,7 +442,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'options' => [
                             'class' => 'col-xs-2'
                         ],
-                        'attribute' => 'leader',
+                        'attribute' => 'idUser.username',
 
                     ],
 
@@ -459,7 +459,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'options' => [
                             'class' => 'col-xs-1'
                         ],
-                        'attribute' => 'leaderPoints',
+                        'attribute' => 'points',
                     ],
 
                     [
@@ -476,8 +476,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         'content' => function($model) {
 
-                            if ($model['is_active'] == Tournaments::GOING ||
-                                $model['is_active'] == Tournaments::NOT_STARTED
+                            if ($model['idTournament']['is_active'] == Tournaments::GOING ||
+                                $model['idTournament']['is_active'] == Tournaments::NOT_STARTED
                             )
 
                                 return Html::a('Участвовать!', ['tournaments/participate', 'id' => $model['id_tournament']], [

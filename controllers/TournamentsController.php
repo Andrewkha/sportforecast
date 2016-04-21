@@ -89,6 +89,7 @@ class TournamentsController extends Controller{
         }
 
         $user = Yii::$app->user->identity;
+        //todo
         Yii::$app->user->returnUrl = Yii::$app->request->url;
         //active tournaments where user participates
         $userTournaments = new ArrayDataProvider([
@@ -112,8 +113,9 @@ class TournamentsController extends Controller{
         ]);
 
         //all tournaments, those not finished - ability to start participating
+        //todo check old function getAllTournamentsNotParticipate
         $notUserTournaments = new ArrayDataProvider([
-            'allModels'=> Tournaments::getAllTournamentsNotParticipate($user->id),
+            'allModels'=> Tournaments::getAllTournamentsUserNotParticipate($user->id),
             'sort' => [
                 'attributes' => ['startsOn'],
                 'defaultOrder' => [

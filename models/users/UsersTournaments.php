@@ -87,6 +87,20 @@ class UsersTournaments extends \yii\db\ActiveRecord
         return $this->hasOne(Users::className(), ['id' => 'id_user']);
     }
 
+    //todo
+    public function getTotalPoints()
+    {
+        //if tournament not finished - from model, else add points for guessing 3 top
+        if($this->idTournament->is_active != Tournaments::FINISHED)
+            return $this->points;
+    }
+
+    //todo
+    public function getPosition()
+    {
+
+    }
+
     //getting possible subscription statuses
     public static function getSubscription() {
 

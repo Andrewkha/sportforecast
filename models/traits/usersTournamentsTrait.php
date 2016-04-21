@@ -19,6 +19,7 @@ use yii\helpers\ArrayHelper;
 trait usersTournamentsTrait
 {
     //calculate user points, user position, leader points and leader name
+    //todo review
     public function getUserLeader() {
 
         //getting the list of games for tournament
