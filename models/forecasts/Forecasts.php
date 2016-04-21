@@ -353,28 +353,6 @@ class Forecasts extends ActiveRecord
         return $games;
     }
 
-    //todo rewriete + find where used
-    public static function getListActiveTournamentsWithLeader() {
-
-        $tournaments = Tournaments::find()
-            ->where(['is_active' => Tournaments::GOING])
-            ->asArray()
-            ->all();
-
-        foreach($tournaments as $k => &$tournament) {
-            $forecasters = self::getForecastersWithPoints($tournament['id_tournament']);
-            if(empty($forecasters)) {
-                $tournament['leader'] = '-';
-                $tournament['leaderPoints'] = '-';
-            } else {
-                $tournament['leader'] = $forecasters[0]['idUser']['username'];
-                $tournament['leaderPoints'] = $forecasters[0]['points'];
-            }
-        }
-
-        return $tournaments;
-    }
-
     public function validForecast($attribute, $params) {
 
         if(($this->fscore_home == NULL && $this->fscore_guest != NULL) || ($this->fscore_home != NULL && $this->fscore_guest == NULL))
