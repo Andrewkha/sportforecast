@@ -373,7 +373,6 @@ $this->title = 'Сайт спортивных прогнозов';
                         'columns' => [
 
                             [
-                                'attribute' => 'tournament_name',
                                 'header' => 'Турнир',
                                 'contentOptions' => [
                                     'class' => 'text-left',
@@ -386,13 +385,12 @@ $this->title = 'Сайт спортивных прогнозов';
                                     'class' => 'col-xs-6'
                                 ],
                                 'content' => function($model) {
-                                    return Html::a($model['tournament_name'], ['tournaments/details', 'id' => $model['id_tournament']]);
+                                    return Html::a($model['idTournament']['tournament_name'], ['tournaments/details', 'id' => $model['id_tournament']]);
                                 },
                                 'format' => 'url',
                             ],
 
                             [
-                                'attribute' => 'leader',
                                 'header' => 'Лидер прогноза',
                                 'contentOptions' => [
                                     'style' => 'vertical-align:middle',
@@ -403,10 +401,12 @@ $this->title = 'Сайт спортивных прогнозов';
                                 'options' => [
                                     'class' => 'col-xs-4'
                                 ],
+                                'content' => function($model) {
+                                    return $model['idUser']['username'];
+                                },
                             ],
 
                             [
-                                'attribute' => 'leaderPoints',
                                 'header' => 'Очки лидера',
                                 'contentOptions' => [
                                     'style' => 'vertical-align:middle',
@@ -417,6 +417,9 @@ $this->title = 'Сайт спортивных прогнозов';
                                 'options' => [
                                     'class' => 'col-xs-1'
                                 ],
+                                'content' => function($model) {
+                                    return $model['points'];
+                                },
                             ],
 
                             [

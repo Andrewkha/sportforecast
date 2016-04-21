@@ -8,6 +8,7 @@
 
 namespace app\models\traits;
 
+use app\models\tournaments\Tournaments;
 use Yii;
 use app\models\result\Result;
 use app\models\games\Games;
@@ -118,7 +119,6 @@ trait tournamentsTrait
     }
 
     //get list of not finished tournaments with leader info
-
     public static function activePendingTournamentsWithLeader()
     {
 
@@ -154,13 +154,31 @@ trait tournamentsTrait
         $participates = UsersTournaments::getTournamentsUserParticipates($user);
 
         $tournaments = self::find()
-            ->with(['country0'])
-            ->where(['not', ['id_tournament' => ArrayHelper::getColumn($participates, 'id_tournament')]])
-            ->andWhere(['or', ['is_active' => self::NOT_STARTED], ['is_active' => self::GOING]])
-            ->asArray()
-            ->all();
+            ->where(['or', ['is_active' => self::NOT_STARTED], ['is_active' => self::GOING]])
+            ->andWhere(['not', ['id_tournament' => ArrayHelper::getColumn($participates, 'id_tournament')]])
+            ->column();
 
-        return self::leaderAndPointsAssignment($tournaments);
+        if(!empty($tournaments))
+        {
+            $query = [];
+            foreach ($tournaments as $one)
+                $query[] = UsersTournaments::find()
+                    ->where(['id_tournament' => $one])
+                    ->orderBy(['points' => SORT_DESC])
+                    ->with('idTournament')
+                    ->with('idUser')
+                    ->limit(1);
+
+            $count = count($query);
+
+            $toExecute = $query[0];
+            for($i = 0; $i < $count - 1; $i++)
+                $toExecute = $toExecute->union($query[$i + 1]);
+
+            return $toExecute->asArray()->all();
+        } else
+            return [];
+
     }
 
     private static function leaderAndPointsAssignment($tournaments) {
