@@ -100,7 +100,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'class' => 'col-lg-2'
                         ],
                         'content' => function($model) {
-                            return Forecasts::getLeaderForTournament($model)['leader'];
+                            return \app\models\users\UsersTournaments::find()->leader($model->id_tournament)->one()->idUser->username;
                         },
                     ],
 
@@ -118,7 +118,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'class' => 'col-lg-2'
                         ],
                         'content' => function($model) {
-                            return Forecasts::getLeaderForTournament($model)['leaderPoints'];
+                            return \app\models\users\UsersTournaments::find()->leader($model->id_tournament)->one()->points;
                         },
                     ],
 

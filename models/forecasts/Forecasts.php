@@ -375,45 +375,6 @@ class Forecasts extends ActiveRecord
         return $tournaments;
     }
 
-    //todo delete
-    public static function getListActivePendingTournamentsWithLeader() {
-
-        $tournaments = Tournaments::find()
-            ->where(['or', ['is_active' => Tournaments::GOING], ['is_active' => Tournaments::NOT_STARTED]])
-            ->asArray()
-            ->all();
-
-        foreach($tournaments as $k => &$tournament) {
-            $forecasters = self::getForecastersWithPoints($tournament['id_tournament']);
-            if(empty($forecasters)) {
-                $tournament['leader'] = '-';
-                $tournament['leaderPoints'] = '-';
-            } else {
-                $tournament['leader'] = $forecasters[0]['idUser']['username'];
-                $tournament['leaderPoints'] = $forecasters[0]['points'];
-            }
-        }
-
-        return $tournaments;
-    }
-
-    //get leader for specific tournament
-
-    //todo find where used and delete
-    public static function getLeaderForTournament($tournament) {
-
-        $forecasters = self::getForecastersWithPoints($tournament->id_tournament);
-        if(empty($forecasters)) {
-            $result['leader'] = '-';
-            $result['leaderPoints'] = '-';
-        } else {
-            $result['leader'] = $forecasters[0]['idUser']['username'];
-            $result['leaderPoints'] = $forecasters[0]['points'];
-        }
-
-        return $result;
-    }
-
     public function validForecast($attribute, $params) {
 
         if(($this->fscore_home == NULL && $this->fscore_guest != NULL) || ($this->fscore_home != NULL && $this->fscore_guest == NULL))
