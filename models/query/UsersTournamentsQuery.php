@@ -37,4 +37,11 @@ class UsersTournamentsQuery extends ActiveQuery
             ->with('idTournament')
             ->orderBy(['points' => SORT_DESC]);
     }
+
+    public function leader($id)
+    {
+        return $this->forecastersStandings($id)->limit(1);
+    }
+
+
 }

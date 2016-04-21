@@ -14,6 +14,8 @@ use app\models\games\Games;
 use app\models\forecasts\Forecasts;
 use yii\data\ArrayDataProvider;
 use app\models\users\UsersTournaments;
+use yii\db\ActiveQuery;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 trait tournamentsTrait
@@ -113,6 +115,37 @@ trait tournamentsTrait
             ->all();
 
         return self::leaderAndPointsAssignment($tournaments);
+    }
+
+    //get list of not finished tournaments with leader info
+
+    public static function activePendingTournamentsWithLeader()
+    {
+
+        $tournaments = self::find()
+            ->where(['or', ['is_active' => self::NOT_STARTED], ['is_active' => self::GOING]])
+            ->column();
+
+        if(!empty($tournaments))
+        {
+            $query = [];
+            foreach ($tournaments as $one)
+                $query[] = UsersTournaments::find()
+                    ->where(['id_tournament' => $one])
+                    ->orderBy(['points' => SORT_DESC])
+                    ->with('idTournament')
+                    ->with('idUser')
+                    ->limit(1);
+
+            $count = count($query);
+
+            $toExecute = $query[0];
+            for($i = 0; $i < $count - 1; $i++)
+                $toExecute = $toExecute->union($query[$i + 1]);
+
+            return $toExecute->asArray()->all();
+        } else
+            return [];
     }
 
     //get list of active and pending tournaments where user doesn't participate with leader info

@@ -6,6 +6,7 @@ use app\models\users\Users;
 use app\models\users\UsersTournaments;
 use Yii;
 use yii\data\ArrayDataProvider;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -82,7 +83,7 @@ class SiteController extends Controller
 
             //list of active tournaments
             $tournaments = new ArrayDataProvider([
-                'allModels' => Forecasts::getListActivePendingTournamentsWithLeader()
+                'allModels' => Tournaments::activePendingTournamentsWithLeader()
             ]);
 
             $futureGames = Games::getAllFutureGames();

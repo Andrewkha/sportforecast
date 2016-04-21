@@ -186,6 +186,7 @@ class Forecasts extends ActiveRecord
     }
 
     //getting the leader, leader points, user and user points for the tournament
+    //todo search where this is used + rewrite
     public static function getLeaderAndUserPosition($user, $tournament) {
 
         $forecasters = self::getForecastersWithPoints($tournament);
@@ -352,6 +353,7 @@ class Forecasts extends ActiveRecord
         return $games;
     }
 
+    //todo rewriete + find where used
     public static function getListActiveTournamentsWithLeader() {
 
         $tournaments = Tournaments::find()
@@ -373,6 +375,7 @@ class Forecasts extends ActiveRecord
         return $tournaments;
     }
 
+    //todo delete
     public static function getListActivePendingTournamentsWithLeader() {
 
         $tournaments = Tournaments::find()
@@ -396,6 +399,7 @@ class Forecasts extends ActiveRecord
 
     //get leader for specific tournament
 
+    //todo find where used and delete
     public static function getLeaderForTournament($tournament) {
 
         $forecasters = self::getForecastersWithPoints($tournament->id_tournament);
