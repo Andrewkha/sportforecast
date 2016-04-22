@@ -198,7 +198,7 @@ class Forecasts extends ActiveRecord
     }
 
     //get list of tours that forecaster did full forecasts (used for reminders) 0 - no forecast, 1 - partilal forecast, 2 - full forecast
-    public static function getUserForecastTour($user, $tournament) {
+    public static function getUserForecastTour($user, $tournament, $toursReal) {
 
         //list of games' tours there're forecasts for
 
@@ -209,7 +209,6 @@ class Forecasts extends ActiveRecord
             ->where(['and', "sf_result.id_tournament = $tournament", "sf_forecasts.id_user = $user", ['not',['sf_forecasts.fscore_home' => null]]])
             ->all();
 
-        $toursReal = Games::getNumberOfGamesPerTour($tournament);
         $fullTourForecast = [];
 
         if($toursForecasted) {

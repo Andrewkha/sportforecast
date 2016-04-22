@@ -18,49 +18,6 @@ use yii\helpers\ArrayHelper;
 
 trait usersTournamentsTrait
 {
-    //calculate user points, user position, leader points and leader name
-    //todo review
-    public function getUserLeader() {
-
-        //getting the list of games for tournament
-        $games = Result::find()->select('id_game')->where(['id_tournament' => $this->id_tournament])->all();
-
-        $standings = Forecasts::find()
-            ->select(['sf_forecasts.id_user', 'sum(points) as points'])
-            ->where(['in', 'id_game', ArrayHelper::getColumn($games, 'id_game')])
-            ->groupBy('id_user')->orderBy(['points' => SORT_DESC])
-            ->all();
-
-        if($standings) {
-            $this->leader = $standings[0]->idUser->username;
-            $this->leaderPoints = $standings[0]->points;
-        }
-
-        $result = ArrayHelper::map($standings, 'id_user', 'points');
-        $this->userPoints = ArrayHelper::getValue($result, $this->id_user);
-
-        foreach($standings as $k => $one) {
-
-            if($one->id_user == $this->id_user) {
-                $this->userPosition = $k+1;
-            }
-        }
-
-        if(empty($this->userPoints))
-            $this->userPoints = '-';
-
-        if(empty($this->userPosition))
-            $this->userPosition = '-';
-
-        if(empty($this->leader))
-            $this->leader = '-';
-
-        if(empty($this->leaderPoints))
-            $this->leaderPoints = '-';
-
-        return true;
-    }
-
     //getting list of users who subscribed for the tournament notifications and didn't make forecast for the tour provided. In other words reminder recipients
     public static function getReminderRecipients($tournament, $tour) {
 

@@ -72,53 +72,17 @@ trait tournamentsTrait
     {
         $forecasters = UsersTournaments::find()
             ->where(['id_tournament' => $this->id_tournament])
-            ->with('users')
+            ->with('idUser')
             ->asArray()
             ->all();
 
+        $tours =  Games::getNumberOfGamesPerTour($this->id_tournament);
         foreach($forecasters as &$one)
         {
-            $one['tours'] = Forecasts::getUserForecastTour($one->id_user, $this->id_tournament);
+            $one['tours'] = Forecasts::getUserForecastTour($one['id_user'], $this->id_tournament, $tours);
         }
 
         return $forecasters;
-    }
-
-    //todo rewrite after adding points to users_tournaments
-    public function getForecastersList() {
-
-        $forecasters1 = Forecasts::getForecastersWithPoints($this->id_tournament);
-
-        $forecastersList1 = [];
-        $forecastersList2 = [];
-
-        //getting tournament forecasters with forecasts
-        foreach($forecasters1 as $k => $one) {
-
-            $forecastersList1[$k]['id_user'] = $one->id_user;
-            $forecastersList1[$k]['points'] = $one->points;
-            $forecastersList1[$k]['name'] = $one->idUser->username;
-            $forecastersList1[$k]['avatar'] = $one->idUser->avatar;
-            $forecastersList1[$k]['tours'] = Forecasts::getUserForecastTour($one->id_user, $this->id_tournament);
-
-        }
-
-        //getting forecasters with no forecasts
-        $forecasters2 = UsersTournaments::find()
-            ->joinWith('idUser')
-            ->where(['and', "id_tournament = $this->id_tournament", ['not in', 'id_user', ArrayHelper::getColumn($forecasters1, 'id_user')] ])
-            ->all();
-
-        foreach($forecasters2 as $k => $one) {
-
-            $forecastersList2[$k]['id_user'] = $one->id_user;
-            $forecastersList2[$k]['points'] = '-';
-            $forecastersList2[$k]['name'] = $one->idUser->username;
-            $forecastersList2[$k]['avatar'] = $one->idUser->avatar;
-            $forecastersList2[$k]['tours'] = Forecasts::getUserForecastTour($one->id_user, $this->id_tournament);
-        }
-
-        return ArrayHelper::merge($forecastersList1, $forecastersList2);
     }
 
     //get list of not finished tournaments with leader info
@@ -136,7 +100,7 @@ trait tournamentsTrait
 
     }
 
-    //list of finished tournaments user participated in
+    //get list of all tournaments user participates in
 
     public static function finishedTournamentsUserParticipated($user)
     {
@@ -152,6 +116,22 @@ trait tournamentsTrait
             return self::unionQueryPrep($tournaments);
         } else
             return UsersTournaments::find()->findModel(NULL, NULL);
+    }
+    //list of finished tournaments user participated in
+
+    public static function allTournamentsUserParticipated($user)
+    {
+        $participates = UsersTournaments::find()->userParticipates($user)->all();
+
+        $tournaments = self::find()
+            ->andWhere(['in', 'id_tournament', ArrayHelper::getColumn($participates, 'id_tournament')])
+            ->column();
+
+        if(!empty($tournaments))
+        {
+            return self::unionQueryPrep($tournaments);
+        } else
+            return UsersTournaments::find()->findModel(NULL, NULL)->all();
     }
 
     //get list of active and pending tournaments where user doesn't participate with leader info

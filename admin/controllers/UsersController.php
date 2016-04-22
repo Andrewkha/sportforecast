@@ -2,6 +2,7 @@
 
 namespace app\admin\controllers;
 
+use app\models\tournaments\Tournaments;
 use Yii;
 use app\models\users\Users;
 use app\models\users\UsersSearch;
@@ -69,13 +70,7 @@ class UsersController extends Controller
             return $this->goBack();
         } else {
 
-            //preparing tournament participation data
-            $tournaments = $model->getUsersTournaments()->with('idTournament.country0')->all();
-
-            //getting leader, leader points, user position and points for each tournament
-            foreach($tournaments as $tournament) {
-                $tournament->getUserLeader();
-            }
+            $tournaments = Tournaments::allTournamentsUserParticipated($id);
 
             //converting tournaments to the arraydata provider
             $arrayDataProvider = new ArrayDataProvider([

@@ -93,7 +93,7 @@ class TournamentsController extends Controller
         $teams = Teams::getTeamCandidates($model->country0, TeamTournaments::getTournamentParticipantsID($id));
 
         $forecasters = new ArrayDataProvider([
-            'allModels' => $model->getForecastersList(),
+            'allModels' => $model->getForecastersListNew(),
         ]);
 
         //getting the next tour number

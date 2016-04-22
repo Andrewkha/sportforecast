@@ -115,7 +115,6 @@ use yii\bootstrap\Modal;
 
                 [
                     'header' => 'Пользователь',
-                    'attribute' => "name",
                     'vAlign' => 'middle',
                     'options' => [
                         'class' => 'col-xs-3 col-sm-2',
@@ -125,7 +124,7 @@ use yii\bootstrap\Modal;
                         'style' => 'text-align:center',
                     ],
                     'content' => function($model1) use ($model) {
-                        return Html::button($model1['name'], [
+                        return Html::button($model1['idUser']['username'], [
                             'value' => Url::to(['tournaments/user', 'user' => $model1['id_user'], 'tournament' => $model->id_tournament]),
                             'class' => 'btn btn-link modalUser']);
                     }

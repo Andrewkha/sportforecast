@@ -148,8 +148,8 @@ use yii\grid\GridView;
                 'headerOptions' => [
                     'style' => 'text-align:center',
                 ],
-                'content' => function($model) {
-                    return ($model->userPosition == NULL)? '-' : $model->userPosition;
+                'content' => function($model1) use($model) {
+                    return (\app\models\users\UsersTournaments::find()->findModel($model1->id_tournament,$model->id)->one()->position);
                 },
                 'filter' => false,
                 'options' => [
@@ -166,8 +166,8 @@ use yii\grid\GridView;
                 'headerOptions' => [
                     'style' => 'text-align:center',
                 ],
-                'content' => function($model) {
-                    return ($model->userPoints == NULL)? '-' : $model->userPoints;
+                'content' => function($model1) use ($model) {
+                    return (\app\models\users\UsersTournaments::find()->findModel($model1->id_tournament,$model->id)->one()->totalPoints);
                 },
                 'filter' => false,
                 'options' => [
