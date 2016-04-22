@@ -67,6 +67,23 @@ trait tournamentsTrait
 
     //getting the list of the forecasters for the tournament. Both with forecasts and with no
 
+    //new getForecastersList
+    public function getForecastersListNew()
+    {
+        $forecasters = UsersTournaments::find()
+            ->where(['id_tournament' => $this->id_tournament])
+            ->with('users')
+            ->asArray()
+            ->all();
+
+        foreach($forecasters as &$one)
+        {
+            $one['tours'] = Forecasts::getUserForecastTour($one->id_user, $this->id_tournament);
+        }
+
+        return $forecasters;
+    }
+
     //todo rewrite after adding points to users_tournaments
     public function getForecastersList() {
 
@@ -104,24 +121,9 @@ trait tournamentsTrait
         return ArrayHelper::merge($forecastersList1, $forecastersList2);
     }
 
-    //get list of all tournaments where user doesn't participate with leader info
-    public static function getAllTournamentsNotParticipate($user) {
-
-        $participates = UsersTournaments::getTournamentsUserParticipates($user);
-
-        $tournaments = self::find()
-            ->with(['country0'])
-            ->where(['not', ['id_tournament' => ArrayHelper::getColumn($participates, 'id_tournament')]])
-            ->asArray()
-            ->all();
-
-        return self::leaderAndPointsAssignment($tournaments);
-    }
-
     //get list of not finished tournaments with leader info
     public static function activePendingTournamentsWithLeader()
     {
-
         $tournaments = self::find()
             ->where(['or', ['is_active' => self::NOT_STARTED], ['is_active' => self::GOING]])
             ->column();
@@ -134,28 +136,63 @@ trait tournamentsTrait
 
     }
 
-    //get list of active and pending tournaments where user doesn't participate with leader info
-    public static function getActivePendingTournamentsNotParticipate($user) {
+    //list of finished tournaments user participated in
 
-        $participates = UsersTournaments::getTournamentsUserParticipates($user);
+    public static function finishedTournamentsUserParticipated($user)
+    {
+        $participates = UsersTournaments::find()->userParticipates($user)->all();
 
         $tournaments = self::find()
-            ->where(['or', ['is_active' => self::NOT_STARTED], ['is_active' => self::GOING]])
-            ->andWhere(['not', ['id_tournament' => ArrayHelper::getColumn($participates, 'id_tournament')]])
+            ->where(['is_active' => self::FINISHED])
+            ->andWhere(['in', 'id_tournament', ArrayHelper::getColumn($participates, 'id_tournament')])
             ->column();
 
         if(!empty($tournaments))
         {
             return self::unionQueryPrep($tournaments);
         } else
-            return [];
+            return UsersTournaments::find()->findModel(NULL, NULL);
+    }
+
+    //get list of active and pending tournaments where user doesn't participate with leader info
+    public static function getActivePendingTournamentsNotParticipate($user)
+    {
+        $participates = UsersTournaments::find()->userParticipates($user)->all();
+
+        $tournaments = self::find()
+            ->where(['or', ['is_active' => self::NOT_STARTED], ['is_active' => self::GOING]])
+            ->andWhere(['not in', 'id_tournament', ArrayHelper::getColumn($participates, 'id_tournament')])
+            ->column();
+
+        if(!empty($tournaments))
+        {
+            return self::unionQueryPrep($tournaments);
+        } else
+            return UsersTournaments::find()->findModel(NULL, NULL)->all();
+    }
+
+    //list of unfinished tournaments ures participates in with leader info
+    public static function getActivePendingTournamentsUserParticipate($user) {
+
+        $participates = UsersTournaments::find()->userParticipates($user)->all();
+
+        $tournaments = self::find()
+            ->where(['or', ['is_active' => self::NOT_STARTED], ['is_active' => self::GOING]])
+            ->andWhere(['in', 'id_tournament', ArrayHelper::getColumn($participates, 'id_tournament')])
+            ->column();
+
+        if(!empty($tournaments))
+        {
+            return self::unionQueryPrep($tournaments);
+        } else
+            return UsersTournaments::find()->findModel(NULL, NULL)->all();
 
     }
 
     //get list of all where user doesn't participate with leader info
     public static function getAllTournamentsUserNotParticipate($user) {
 
-        $participates = UsersTournaments::getTournamentsUserParticipates($user);
+        $participates = UsersTournaments::find()->userParticipates($user)->all();
 
         $tournaments = self::find()
             ->andWhere(['not', ['id_tournament' => ArrayHelper::getColumn($participates, 'id_tournament')]])
@@ -165,7 +202,7 @@ trait tournamentsTrait
         {
             return self::unionQueryPrep($tournaments);
         } else
-            return [];
+            return UsersTournaments::find()->findModel(NULL, NULL)->all();
 
     }
 
@@ -174,10 +211,10 @@ trait tournamentsTrait
         $query = [];
         foreach ($array as $one)
             $query[] = UsersTournaments::find()
-                ->where(['id_tournament' => $one])
+                ->where(['{{%users_tournaments}}.id_tournament' => $one])
+                ->joinWith('idTournament.country0')
+                ->joinWith('idUser')
                 ->orderBy(['points' => SORT_DESC])
-                ->with('idTournament.country0')
-                ->with('idUser')
                 ->limit(1);
 
         $count = count($query);
@@ -186,32 +223,15 @@ trait tournamentsTrait
         for($i = 0; $i < $count - 1; $i++)
             $toExecute = $toExecute->union($query[$i + 1]);
 
-        return $toExecute->asArray()->all();
-    }
-
-    private static function leaderAndPointsAssignment($tournaments) {
-
-        foreach($tournaments as $k => &$tournament) {
-            $forecasters = Forecasts::getForecastersWithPoints($tournament['id_tournament']);
-            if(empty($forecasters)) {
-                $tournament['leader'] = '-';
-                $tournament['leaderPoints'] = '-';
-            } else {
-                $tournament['leader'] = $forecasters[0]['idUser']['username'];
-                $tournament['leaderPoints'] = $forecasters[0]['points'];
-            }
-        }
-
-        return $tournaments;
+        return $toExecute->all();
     }
 
     public static function generateFinalNews($tournament) {
 
         $trn = self::findOne($tournament);
 
-
         $forecasters = new ArrayDataProvider([
-            'allModels' => Forecasts::getTopThreeForecastersWithPoints($tournament)
+            'allModels' => UsersTournaments::topThreeForecastersForTournament($tournament)
         ]);
 
         $standings = new ArrayDataProvider([

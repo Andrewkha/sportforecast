@@ -87,18 +87,25 @@ class UsersTournaments extends \yii\db\ActiveRecord
         return $this->hasOne(Users::className(), ['id' => 'id_user']);
     }
 
-    //todo
     public function getTotalPoints()
     {
         //if tournament not finished - from model, else add points for guessing 3 top
         if($this->idTournament->is_active != Tournaments::FINISHED)
             return $this->points;
+        else
+            return $this->points;
+        //todo  add additional forecast once done
     }
 
-    //todo
     public function getPosition()
     {
+        $models = self::find()->forecastersStandings($this->id_tournament)->all();
 
+        foreach ($models as $k => $one)
+            if($one->id_tournament == $this->id_tournament && $one->id_user == $this->id_user)
+                return $k + 1;
+
+        return '-';
     }
 
     //getting possible subscription statuses
@@ -133,5 +140,17 @@ class UsersTournaments extends \yii\db\ActiveRecord
             ->all(), 'id_game');
 
         return Forecasts::deleteAll(['and', ['in', 'id_game', $games], ['id_user' => $this->id_user]]);
+    }
+
+    public static function topThreeForecastersForTournament($tournament)
+    {
+        $result = self::find()
+            ->where(['id_tournament' => $tournament])
+            ->with('idUser')
+            ->orderBy(['points' => SORT_DESC])
+            ->limit(3)
+            ->all();
+
+        return $result;
     }
 }

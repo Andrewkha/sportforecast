@@ -50,10 +50,7 @@ use yii\helpers\Html;
                 'headerOptions' => [
                     'style' => 'text-align:center',
                 ],
-                'content' => function($model) {
-
-                    return $model->idUser->username;
-                }
+                'attribute' => 'idUser.username'
             ],
 
             [

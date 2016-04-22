@@ -82,8 +82,10 @@ class SiteController extends Controller
         if(Yii::$app->user->isGuest) {
 
             //list of active tournaments
-            $tournaments = new ArrayDataProvider([
-                'allModels' => Tournaments::activePendingTournamentsWithLeader()
+            $tournaments = new ActiveDataProvider([
+                'query' => Tournaments::activePendingTournamentsWithLeader(),
+                'pagination' => false
+
             ]);
 
             $futureGames = Games::getAllFutureGames();
@@ -93,15 +95,17 @@ class SiteController extends Controller
         }
 
         //list of active tournaments
-        $tournaments = new ArrayDataProvider([
-            'allModels' => Tournaments::getActivePendingTournamentsNotParticipate(Yii::$app->user->id),
+        $tournaments = new ActiveDataProvider([
+            'query' => Tournaments::getActivePendingTournamentsNotParticipate(Yii::$app->user->id),
+            'pagination' => false,
         ]);
 
         $futureGames = Games::getAllFutureGamesWithForecast(Yii::$app->user->id);
         $recentGames = Games::getAllRecentGamesWithForecast(Yii::$app->user->id);
 
-        $userTournaments = new ArrayDataProvider([
-            'allModels' => UsersTournaments::getActivePendingUserTournamentsAndPosition(Yii::$app->user->id),
+        $userTournaments = new ActiveDataProvider([
+            'query' => Tournaments::getActivePendingTournamentsUserParticipate(Yii::$app->user->id),
+            'pagination' => false,
         ]);
 
         return $this->render('indexUser', compact('tournaments', 'userTournaments', 'futureGames', 'recentGames'));

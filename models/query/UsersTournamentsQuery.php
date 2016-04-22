@@ -43,5 +43,14 @@ class UsersTournamentsQuery extends ActiveQuery
         return $this->forecastersStandings($id)->limit(1);
     }
 
+    public function userParticipates($user)
+    {
+        return $this->andWhere(['id_user' => $user]);
+    }
 
+    public function findModel($tournament, $user)
+    {
+        return $this->andWhere(['id_tournament' => $tournament])
+        ->andWhere(['id_user' => $user]);
+    }
 }

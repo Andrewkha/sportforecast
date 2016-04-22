@@ -8,6 +8,7 @@ use app\components\widgets\News;
 
 use app\components\grid\extendedGridView;
 use app\models\teams\Teams;
+use app\models\users\UsersTournaments;
 /* @var $this yii\web\View */
 $this->title = 'Сайт спортивных прогнозов';
 ?>
@@ -318,13 +319,12 @@ $this->title = 'Сайт спортивных прогнозов';
                                     'class' => 'col-xs-7'
                                 ],
                                 'content' => function($model) {
-                                    return Html::a($model->idTournament->tournament_name, ['tournaments/details', 'id' => $model->idTournament->id_tournament]);
+                                    return Html::a($model->idTournament->tournament_name, ['tournaments/details', 'id' => $model->id_tournament]);
                                 },
                                 'format' => 'url',
                             ],
 
                             [
-                                'attribute' => 'userPoints',
                                 'header' => 'Ваши очки',
                                 'contentOptions' => [
                                     'style' => 'vertical-align:middle',
@@ -335,10 +335,13 @@ $this->title = 'Сайт спортивных прогнозов';
                                 'options' => [
                                     'class' => 'col-xs-4'
                                 ],
+                                'content' => function($model) {
+                                    $points = UsersTournaments::find()->findModel($model->id_tournament, Yii::$app->user->id)->one()->totalPoints;
+                                    return ($points === NULL)? '-' : $points;
+                                }
                             ],
 
                             [
-                                'attribute' => 'userPosition',
                                 'header' => 'Место',
                                 'contentOptions' => [
                                     'style' => 'vertical-align:middle',
@@ -349,6 +352,9 @@ $this->title = 'Сайт спортивных прогнозов';
                                 'options' => [
                                     'class' => 'col-xs-1'
                                 ],
+                                'content' => function($model) {
+                                    return UsersTournaments::find()->findModel($model->id_tournament, Yii::$app->user->id)->one()->position;
+                                },
                             ],
                         ]
                     ])?>
@@ -385,7 +391,7 @@ $this->title = 'Сайт спортивных прогнозов';
                                     'class' => 'col-xs-6'
                                 ],
                                 'content' => function($model) {
-                                    return Html::a($model['idTournament']['tournament_name'], ['tournaments/details', 'id' => $model['id_tournament']]);
+                                    return Html::a($model->idTournament->tournament_name, ['tournaments/details', 'id' => $model->id_tournament]);
                                 },
                                 'format' => 'url',
                             ],
@@ -401,9 +407,7 @@ $this->title = 'Сайт спортивных прогнозов';
                                 'options' => [
                                     'class' => 'col-xs-4'
                                 ],
-                                'content' => function($model) {
-                                    return $model['idUser']['username'];
-                                },
+                                'attribute' => 'idUser.username'
                             ],
 
                             [
@@ -417,9 +421,7 @@ $this->title = 'Сайт спортивных прогнозов';
                                 'options' => [
                                     'class' => 'col-xs-1'
                                 ],
-                                'content' => function($model) {
-                                    return $model['points'];
-                                },
+                                'attribute' => 'points',
                             ],
 
                             [
@@ -434,7 +436,7 @@ $this->title = 'Сайт спортивных прогнозов';
                                     'class' => 'col-xs-1'
                                 ],
                                 'content' => function($model) {
-                                    return Html::a('Участвовать!', ['tournaments/participate', 'id' => $model['id_tournament']], [
+                                    return Html::a('Участвовать!', ['tournaments/participate', 'id' => $model->id_tournament], [
                                         'class' => 'btn btn-success btn-xs',
                                         'data-method' => 'post'
                                     ]);

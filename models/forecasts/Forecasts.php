@@ -168,25 +168,7 @@ class Forecasts extends ActiveRecord
         return $forecasts;
     }
 
-    //get forecasters with points for the tournament
-    public static function getTopThreeForecastersWithPoints($tournament) {
-
-        $games = ArrayHelper::getColumn(Result::find()->select('id_game')->where(['id_tournament' => $tournament])->all(), 'id_game');
-
-        $forecasts = self::find()
-            ->select(['sum(points) as points', 'id_user'])
-            ->joinWith('idUser')
-            ->where(['in', 'id_game', $games])
-            ->groupBy('id_user')
-            ->orderBy(['points' => SORT_DESC])
-            ->limit(3)
-            ->all();
-
-        return $forecasts;
-    }
-
     //getting the leader, leader points, user and user points for the tournament
-    //todo search where this is used + rewrite
     public static function getLeaderAndUserPosition($user, $tournament) {
 
         $forecasters = self::getForecastersWithPoints($tournament);

@@ -89,39 +89,27 @@ class TournamentsController extends Controller{
         }
 
         $user = Yii::$app->user->identity;
-        //todo
+
         Yii::$app->user->returnUrl = Yii::$app->request->url;
+
         //active tournaments where user participates
+        $k = Tournaments::getActivePendingTournamentsUserParticipate($user->id);
+        ArrayHelper::multisort($k, 'idTournament.startsOn', SORT_DESC);
         $userTournaments = new ArrayDataProvider([
-            'allModels'=> UsersTournaments::getActivePendingUserTournamentsAndPosition($user->id),
-            'sort' => [
-                'attributes' => ['idTournament.startsOn'],
-                'defaultOrder' => [
-                    'idTournament.startsOn' => SORT_DESC
-                ]
-            ]
+            'allModels'=> $k,
         ]);
 
+        $k = Tournaments::finishedTournamentsUserParticipated($user->id);
+        ArrayHelper::multisort($k, 'idTournament.startsOn', SORT_DESC);
         $userFinishedTournaments = new ArrayDataProvider([
-            'allModels'=> UsersTournaments::getFinishedUserTournamentsAndPosition($user->id),
-            'sort' => [
-                'attributes' => ['idTournament.startsOn'],
-                'defaultOrder' => [
-                    'idTournament.startsOn' => SORT_DESC
-                ]
-            ]
+            'allModels'=> $k,
         ]);
 
+        $k = Tournaments::getAllTournamentsUserNotParticipate($user->id);
+        ArrayHelper::multisort($k, 'idTournament.startsOn', SORT_DESC);
         //all tournaments, those not finished - ability to start participating
-        //todo check old function getAllTournamentsNotParticipate
         $notUserTournaments = new ArrayDataProvider([
-            'allModels'=> Tournaments::getAllTournamentsUserNotParticipate($user->id),
-            'sort' => [
-                'attributes' => ['startsOn'],
-                'defaultOrder' => [
-                    'startsOn' => SORT_DESC
-                ]
-            ]
+            'allModels'=> $k,
         ]);
 
         return $this->render('indexUser', [

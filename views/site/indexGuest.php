@@ -246,7 +246,7 @@ if(Yii::$app->session->hasFlash('success')) {
                                     'class' => 'col-xs-7'
                                 ],
                                 'content' => function($model) {
-                                    return Html::a($model['idTournament']['tournament_name'], ['tournaments/details', 'id' => $model['id_tournament']]);
+                                    return Html::a($model->idTournament->tournament_name, ['tournaments/details', 'id' => $model->id_tournament]);
                                 },
                                 'format' => 'url',
                             ],
@@ -264,7 +264,7 @@ if(Yii::$app->session->hasFlash('success')) {
                                     'class' => 'col-xs-4'
                                 ],
                                 'content' => function($model) {
-                                    return $model['idUser']['username'];
+                                    return $model->idUser->username;
                                 },
                             ],
 
