@@ -12,6 +12,7 @@ use app\models\reminders\Reminders;
 use app\models\forecasts\Forecasts;
 use app\models\tournaments\Tournaments;
 use app\models\users\Users;
+use app\models\games\Games;
 use app\models\result\Result;
 use yii\helpers\ArrayHelper;
 
@@ -27,10 +28,10 @@ trait usersTournamentsTrait
             ->all();
 
         $recipients = [];
-
+        $tours =  Games::getNumberOfGamesPerTour($tournament);
         foreach($candidates as $one) {
 
-            if(Forecasts::getUserForecastTour($one['id_user'], $tournament)[$tour] != '2') {
+            if(Forecasts::getUserForecastTour($one['id_user'], $tournament, $tours)[$tour] != '2') {
 
                 $recipients[] = Users::find()
                     ->where(['id' => $one['id_user']])
@@ -50,10 +51,10 @@ trait usersTournamentsTrait
             ->all();
 
         $recipients = [];
-
+        $tours =  Games::getNumberOfGamesPerTour($tournament);
         foreach($candidates as $one) {
 
-            if(Forecasts::getUserForecastTour($one['id_user'], $tournament)[$tour] != '2' && Reminders::ifEligible($tournament, $tour, $one['id_user'])) {
+            if(Forecasts::getUserForecastTour($one['id_user'], $tournament, $tours)[$tour] != '2' && Reminders::ifEligible($tournament, $tour, $one['id_user'])) {
 
                 $recipients[] = Users::find()
                     ->where(['id' => $one['id_user']])

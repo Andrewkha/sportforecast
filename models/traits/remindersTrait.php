@@ -14,6 +14,7 @@ use app\models\forecasts\Forecasts;
 use app\models\tournaments\Tournaments;
 use app\models\result\Result;
 use app\models\reminders\Reminders;
+use app\models\games\Games;
 use yii\base\ErrorException;
 use yii\helpers\ArrayHelper;
 use yii\data\ArrayDataProvider;
@@ -70,7 +71,8 @@ trait remindersTrait
 
         foreach($users as $user) {
 
-            if(Forecasts::getUserForecastTour($user->id, $tournament)[$tour] == 0) {
+            $tours =  Games::getNumberOfGamesPerTour($tournament);
+            if(Forecasts::getUserForecastTour($user->id, $tournament, $tours)[$tour] == 0) {
                 $description = "Вы не сделали прогноз на матчи $tour тура турнира ".Tournaments::findOne($tournament)->tournament_name.". Поторопитесь, первая игра тура начинается <strong>$firstGameStarts</strong>";
             } else {
                 $description = "Вы сделали прогноз не на все матчи: $tour тура турнира ".Tournaments::findOne($tournament)->tournament_name.". Поторопитесь, первая игра тура начинается $firstGameStarts";
