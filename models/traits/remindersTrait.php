@@ -69,9 +69,9 @@ trait remindersTrait
             ->all()[0], 'dtime')
         );
 
+        $tours =  Games::getNumberOfGamesPerTour($tournament);
         foreach($users as $user) {
 
-            $tours =  Games::getNumberOfGamesPerTour($tournament);
             if(Forecasts::getUserForecastTour($user->id, $tournament, $tours)[$tour] == 0) {
                 $description = "Вы не сделали прогноз на матчи $tour тура турнира ".Tournaments::findOne($tournament)->tournament_name.". Поторопитесь, первая игра тура начинается <strong>$firstGameStarts</strong>";
             } else {

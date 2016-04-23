@@ -40,10 +40,11 @@ trait tournamentsTrait
                 return $trn->num_tours;
             }
 
+            $tours =  Games::getNumberOfGamesPerTour($tournament);
             do {
 
-                if(isset(Games::getNumberOfGamesPerTour($tournament)[$tour])) {
-                    $gamesInTour = Games::getNumberOfGamesPerTour($tournament)[$tour];
+                if(isset($tours[$tour])) {
+                    $gamesInTour = $tours[$tour];
 
                     $remainingGamesInTour = Result::find()
                         ->select(['id_game'])
