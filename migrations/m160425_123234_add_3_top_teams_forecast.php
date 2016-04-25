@@ -8,10 +8,10 @@ class m160425_123234_add_3_top_teams_forecast extends Migration
     {
         $this->createTable('{{%top_3_teams_forecast}}',[
             'id' => $this->primaryKey(),
-            'id_user' => $this->integer()->notNull(),
-            'id_tournament' => $this->integer()->notNull(),
-            'id_participant_team' => $this->integer()->notNull(),
-            'forecasted_position' => $this->integer(1)->notNull(),
+            'id_user' => $this->integer(11)->unsigned()->notNull(),
+            'id_tournament' => $this->integer(11)->notNull(),
+            'id_participant_team' => $this->integer(10)->unsigned()->notNull(),
+            'forecasted_position' => $this->integer(1)->unsigned()->notNull(),
             'time' => $this->integer(),
         ]);
 
