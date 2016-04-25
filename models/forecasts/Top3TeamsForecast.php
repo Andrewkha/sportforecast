@@ -3,6 +3,8 @@
 namespace app\models\forecasts;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "{{%top_3_teams_forecast}}".
@@ -46,13 +48,31 @@ class Top3TeamsForecast extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'id_user' => 'Id User',
-            'id_tournament' => 'Id Tournament',
-            'id_participant_team' => 'Id Participant Team',
-            'forecasted_position' => 'Forecasted Position',
+            'id_user' => 'Пользователь',
+            'id_tournament' => 'Турнир',
+            'id_participant_team' => 'Команда',
+            'forecasted_position' => 'Место',
             'time' => 'Time',
         ];
     }
+
+    public function behaviors() {
+
+        return [
+            'TimestampBehavior' =>
+                [
+                    'class' => TimestampBehavior::className(),
+                    'createdAtAttribute' => 'time',
+                    'updatedAtAttribute' => 'time',
+                ],
+            'BlameableBehavior' =>
+                [
+                    'class' => BlameableBehavior::className(),
+                    'createdByAttribute' => 'id_user',
+                    'updatedByAttribute' => 'id_user',
+                ]
+            ];
+        }
 
     /**
      * @return \yii\db\ActiveQuery
