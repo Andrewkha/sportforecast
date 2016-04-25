@@ -15,9 +15,7 @@ class m160425_123234_add_3_top_teams_forecast extends Migration
             'time' => $this->integer(),
         ]);
 
-        $this->createIndex('idx-topteams-user-tournament', '{{%top_3_teams_forecast}}', ['id_user', 'id_tournament']);
-
-        $this->createIndex('idx-topteams-team', '{{%top_3_teams_forecast}}', 'id_participant_team');
+        $this->createIndex('idx-topteams-user-tournament_team', '{{%top_3_teams_forecast}}', ['id_user', 'id_tournament', 'id_participant_team']);
 
         $this->addForeignKey('fk-topteams-id_user','{{%top_3_teams_forecast}}','id_user' ,'{{%users}}', 'id', 'CASCADE', 'CASCADE');
 
