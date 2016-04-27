@@ -10,8 +10,19 @@ use app\models\tournaments\TeamTournaments;
 use yii\helpers\Html;
 
 ?>
+
+<?php
+if(time() > $tournament->wfDueTo)
+    $expired = true;
+else
+    $expired = false;
+
+$subtitle = ($expired)? 'Прием прогнозов на призеров окончен '.date('d.m.y', $tournament->wfDueTo) :
+    'Вы можете сделать прогноз на призеров турнира до '.date('d.m.y', $tournament->wfDueTo);
+?>
 <div class = 'col-xs-12 col-md-5 col-lg-4 col-lg-offset-1'>
     <p class = 'text-center' style="font-size:1.5em; color: #777">Прогноз на призеров турнира</p>
+    <p class = 'text-center' style="color: #777"><?=$subtitle;?></p>
 
     <?php $teams = TeamTournaments::find()
         ->select(['{{%teams}}.team_name', 'id'])
@@ -21,13 +32,17 @@ use yii\helpers\Html;
         ->column()
     ;?>
 
+    <?php
+        $options = ['prompt' => '---Выберете команду---'];
+        if($expired)
+            $options['disabled'] = 'disabled';
+    ?>
     <?php $form = ActiveForm::begin(); ?>
-        <?= $form->field($winners, 'first')->dropDownList($teams, ['prompt' => '---Выберете команду---']);?>
-        <?= $form->field($winners, 'second')->dropDownList($teams, ['prompt' => '---Выберете команду---']);?>
-        <?= $form->field($winners, 'third')->dropDownList($teams, ['prompt' => '---Выберете команду---']);?>
+        <?= $form->field($winners, 'first')->dropDownList($teams, $options);?>
+        <?= $form->field($winners, 'second')->dropDownList($teams, $options);?>
+        <?= $form->field($winners, 'third')->dropDownList($teams, $options);?>
 
-        <?php //todo add disable for fields and button ?>
-        <?= Html::submitButton('Сохранить', ['type' => 'button', 'class' => ['btn btn-primary pull-right']]);?>
+        <?= (!$expired)? Html::submitButton('Сохранить', ['type' => 'button', 'class' => ['btn btn-primary pull-right']]) : NULL;?>
     <?php ActiveForm::end();?>
     <br>
     <br>

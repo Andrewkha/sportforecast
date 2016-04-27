@@ -168,12 +168,14 @@ class TournamentsController extends Controller{
             $winners = new TopTeamsForm($user->id, $id);
             if ($winners->load(Yii::$app->request->post()) && $winners->validate()) {
 
-                $winners->edit();
-                Yii::$app->getSession()->setFlash('success', 'Прогноз на призеров турнира успешно сохранен');
-
+                if(time() < $tournament->wfDueTo)
+                {
+                    $winners->edit();
+                    Yii::$app->getSession()->setFlash('success', 'Прогноз на призеров турнира успешно сохранен');
+                } else
+                    Yii::$app->getSession()->setFlash('success', 'Не нужно пытаться обмануть :)');
                 return $this->refresh();
             }
-
         }
 
         return $this->render($viewFile, compact('tournament', 'teamParticipants', 'forecasters', 'tour_list', 'tourGames', 'winners'));
