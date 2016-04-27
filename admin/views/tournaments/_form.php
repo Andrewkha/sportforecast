@@ -46,6 +46,20 @@ use yii\bootstrap\Modal;
                     ]
             ]) ?>
 
+            <?= $form->field($model, 'wfDueTo', [
+                'template' => '{label} <div class="row"><div class="col-xs-12 col-sm-8">{input}{error}{hint}</div></div>'
+            ])->widget(DatePicker::className(),[
+                'removeButton' => false,
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'dd.mm.yyyy',
+                    'todayHighlight' => true,
+                ],
+                'options' => [
+                    'value' => (isset($model->wfDueTo))? date('d.m.Y', $model->wfDueTo) : '',
+                ]
+            ]) ?>
+
             <?= $form->field($model, 'is_active', [
                'template' => '{label} <div class="row"><div class="col-xs-8">{input}{error}{hint}</div></div>'
             ])->dropDownList(

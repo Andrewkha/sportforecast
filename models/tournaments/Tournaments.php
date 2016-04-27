@@ -51,11 +51,12 @@ class Tournaments extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tournament_name', 'country', 'num_tours', 'is_active'], 'required'],
+            [['tournament_name', 'country', 'num_tours', 'is_active', 'wfDueTo'], 'required'],
             [['country', 'num_tours', 'enableAutoprocess'], 'integer'],
             [['tournament_name',], 'string', 'max' => 255],
             ['autoProcessURL', 'url'],
             ['startsOn', 'date', 'format' => 'php:d.m.Y', 'timestampAttribute' => 'startsOn'],
+            ['wfDueTo', 'date', 'format' => 'php:d.m.Y', 'timestampAttribute' => 'wfDueTo'],
         ];
     }
 
@@ -71,6 +72,7 @@ class Tournaments extends \yii\db\ActiveRecord
             'num_tours' => Yii::t('app', 'Количество туров'),
             'is_active' => Yii::t('app', 'Статус'),
             'startsOn' => 'Начало турнира',
+            'wfDueTo' => 'Окончание приема прогнозов на призеров турнира',
             'enableAutoprocess' => 'Автозагрузка календаря',
             'autoProcessURL' => 'Источник данных',
         ];

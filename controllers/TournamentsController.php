@@ -9,6 +9,8 @@
 
 namespace app\controllers;
 
+use app\models\forecasts\Top3TeamsForecast;
+use app\models\forecasts\TopTeamsForm;
 use app\models\tournaments\TeamTournaments;
 use yii\web\NotFoundHttpException;
 use app\models\users\UsersTournaments;
@@ -156,13 +158,25 @@ class TournamentsController extends Controller{
 
             $tourGames = Games::getGamesGroupedByTour($id, $tours);
             $viewFile = 'tournamentDetailsGuest';
+            $winners = [];
         } else {
 
-            $tourGames = Games::getGamesGroupedByTourWithForecast($id, $tours, Yii::$app->user->id);
+            $tourGames = Games::getGamesGroupedByTourWithForecast($id, $tours, $user->id);
             $viewFile = 'tournamentDetailsUser';
+            
+            //preparing tournament winners forecast form
+            $winners = new TopTeamsForm($user->id, $id);
+            if ($winners->load(Yii::$app->request->post()) && $winners->validate()) {
+
+                $winners->edit();
+                Yii::$app->getSession()->setFlash('success', 'Прогноз на призеров турнира успешно сохранен');
+
+                return $this->refresh();
+            }
+
         }
 
-        return $this->render($viewFile, compact('tournament', 'teamParticipants', 'forecasters', 'tour_list', 'tourGames'));
+        return $this->render($viewFile, compact('tournament', 'teamParticipants', 'forecasters', 'tour_list', 'tourGames', 'winners'));
 
     }
 

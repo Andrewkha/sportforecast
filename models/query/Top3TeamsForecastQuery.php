@@ -19,6 +19,13 @@ class Top3TeamsForecastQuery extends \yii\db\ActiveQuery
      * @inheritdoc
      * @return \app\models\forecasts\Top3TeamsForecast[]|array
      */
+    public function findModel($user, $tournament, $position)
+    {
+        return $this->where(['id_user' => $user])
+            ->andWhere(['id_tournament' => $tournament])
+            ->andWhere(['forecasted_position' => $position]);
+    }
+
     public function all($db = null)
     {
         return parent::all($db);

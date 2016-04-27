@@ -66,6 +66,12 @@ $this->params['breadcrumbs'][] = $tournament->tournament_name;
             ]);
             ?>
 
+            <?= $this->render('_winners', [
+                'winners' => $winners,
+                'tournament' => $tournament,
+            ]);
+            ?>
+
             <?= $this->render('_forecasters', [
                 'forecasters' => $forecasters,
                 'tournament' => $tournament,

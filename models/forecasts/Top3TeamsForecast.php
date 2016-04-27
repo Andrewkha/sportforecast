@@ -79,7 +79,7 @@ class Top3TeamsForecast extends \yii\db\ActiveRecord
      */
     public function getIdParticipantTeam()
     {
-        return $this->hasOne(TeamTournaments::className(), ['id' => 'id_participant_team']);
+        return $this->hasOne(\app\models\tournaments\TeamTournaments::className(), ['id' => 'id_participant_team']);
     }
 
     /**
@@ -87,7 +87,7 @@ class Top3TeamsForecast extends \yii\db\ActiveRecord
      */
     public function getIdTournament()
     {
-        return $this->hasOne(Tournaments::className(), ['id_tournament' => 'id_tournament']);
+        return $this->hasOne(\app\models\tournaments\Tournaments::className(), ['id_tournament' => 'id_tournament']);
     }
 
     /**
@@ -95,7 +95,7 @@ class Top3TeamsForecast extends \yii\db\ActiveRecord
      */
     public function getIdUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'id_user']);
+        return $this->hasOne(\app\models\users\Users::className(), ['id' => 'id_user']);
     }
 
     /**
