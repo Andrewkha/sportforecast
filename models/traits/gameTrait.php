@@ -487,6 +487,7 @@ trait gameTrait
                 else
                     $message = "Вы заняли $position место, набрав $points очков";
 
+                
                 $messages[] = Yii::$app->mailer->compose('tournamentResult', [
                     'standings' => $standings,
                     'user' => $one,
