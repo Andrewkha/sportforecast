@@ -246,13 +246,12 @@ if(Yii::$app->session->hasFlash('success')) {
                                     'class' => 'col-xs-7'
                                 ],
                                 'content' => function($model) {
-                                    return Html::a($model->idTournament->tournament_name, ['tournaments/details', 'id' => $model->id_tournament]);
+                                    return Html::a($model->tournament_name, ['tournaments/details', 'id' => $model->id_tournament]);
                                 },
                                 'format' => 'url',
                             ],
 
                             [
-                                //'attribute' => 'idUser.username',
                                 'header' => 'Лидер прогноза',
                                 'contentOptions' => [
                                     'style' => 'vertical-align:middle',
@@ -264,12 +263,11 @@ if(Yii::$app->session->hasFlash('success')) {
                                     'class' => 'col-xs-4'
                                 ],
                                 'content' => function($model) {
-                                    return $model->idUser->username;
+                                    return (isset($model->usersTournaments[0]->idUser->username))? $model->usersTournaments[0]->idUser->username :'-';
                                 },
                             ],
 
                             [
-                                'attribute' => 'points',
                                 'header' => 'Очки лидера',
                                 'contentOptions' => [
                                     'style' => 'vertical-align:middle',
@@ -280,6 +278,9 @@ if(Yii::$app->session->hasFlash('success')) {
                                 'options' => [
                                     'class' => 'col-xs-1'
                                 ],
+                                'content' => function($model) {
+                                    return (isset($model->usersTournaments[0]->points))? $model->usersTournaments[0]->points :'-';
+                                },
                             ],
                         ]
                     ])

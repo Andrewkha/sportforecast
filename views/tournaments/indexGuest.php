@@ -20,7 +20,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="row">
             <?= extendedGridView::widget([
                 'dataProvider' => $dataProvider,
-                'filterModel' => $searchModel,
                 'bordered' => false,
                 'options' => [
                     'class' => 'col-xs-12 col-md-10 col-lg-8'
@@ -48,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
 
                     [
-                        'attribute' => 'country',
+                        'attribute' => 'country0.country',
                         'contentOptions' => [
                             'align' => 'center',
                             'style' => 'vertical-align:middle',
@@ -56,10 +55,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         'headerOptions' => [
                             'style' => 'text-align:center',
                         ],
-                        'content' => function($model) {
-                            return $model->country0->country;
-                        },
-                        'filter' => $countries,
                         'filterInputOptions' => [
                             'class' => 'form-control'
                         ],
@@ -69,13 +64,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
 
                     [
-                        'attribute' => 'is_active',
-                        'content' => function($model) {
-                            return $model->status;
-                        },
+                        'attribute' => 'status',
                         'options' => [
                             'class' => 'col-lg-2'
                         ],
+                        'header' => 'Статус',
                         'headerOptions' => [
                             'style' => 'text-align:center',
                         ],
@@ -100,7 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'class' => 'col-lg-2'
                         ],
                         'content' => function($model) {
-                            return \app\models\users\UsersTournaments::find()->leader($model->id_tournament)->one()->idUser->username;
+                            return (isset($model->usersTournaments[0]->idUser->username))? $model->usersTournaments[0]->idUser->username :'-';
                         },
                     ],
 
@@ -118,7 +111,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'class' => 'col-lg-2'
                         ],
                         'content' => function($model) {
-                            return \app\models\users\UsersTournaments::find()->leader($model->id_tournament)->one()->points;
+                            return (isset($model->usersTournaments[0]->idUser->username))? $model->usersTournaments[0]->points :'-';
                         },
                     ],
 

@@ -15,6 +15,7 @@ use app\models\users\Users;
 use app\models\result\Result;
 use app\models\news\News;
 use app\models\forecasts\Forecasts;
+use yii\data\ActiveDataProvider;
 use yii\db\Query;
 use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
@@ -407,14 +408,14 @@ trait gameTrait
 
         $trn = Tournaments::findOne($tournament);
 
+        $recipientsUT =  UsersTournaments::find()
+            ->joinWith('idUser')
+            ->where(['and', ['id_tournament' => $tournament], ['notification' => UsersTournaments::NOTIFICATION_ENABLED], ['sf_users.active' => Users::STATUS_ACTIVE]])
+            ->all();
+
+        $recipients = ArrayHelper::getColumn($recipientsUT, 'idUser');
         //if not last tour - just send notifications
         if($tour != $trn->num_tours) {
-
-            $recipients =  ArrayHelper::getColumn(UsersTournaments::find()
-                ->joinWith('idUser')
-                ->where(['and', ['id_tournament' => $tournament], ['notification' => UsersTournaments::NOTIFICATION_ENABLED], ['sf_users.active' => Users::STATUS_ACTIVE]])
-                ->all(),
-                'idUser');
 
             $subject = "Результаты $tour тура - ".$trn->tournament_name;
 
@@ -460,13 +461,46 @@ trait gameTrait
             }
         } else {
 
+            //todo add additional points info and tournament standings into the personal email
             $news = new News();
-            $news->scenario = 'send';
             $news->subject = 'Закончен турнир '.$trn->tournament_name;
             $news->body = Tournaments::generateFinalNews($tournament);
             $news->id_tournament = $tournament;
 
             $news->save();
+
+            //sending personal emails
+
+            $standings = new ActiveDataProvider([
+                'query' => UsersTournaments::find()->forecastersStandings($tournament),
+                'pagination' => false
+            ]);
+
+            $subject = "Закончен турнир $trn->tournament_name";
+            foreach ($recipientsUT as $one)
+            {
+                $position = $one->position;
+                $points = $one->totalPoints;
+
+                if($position == 1)
+                    $message = "Поздравляем!!! Набрав $points очков, Вы стали победителем турнира!";
+                else
+                    $message = "Вы заняли $position место, набрав $points очков";
+
+                $messages[] = Yii::$app->mailer->compose('tournamentResult', [
+                    'standings' => $standings,
+                    'user' => $one,
+                    'message' => $message,
+                    'tournament' => $trn
+                ])
+                    ->setFrom([Yii::$app->params['adminEmail'] => 'Sportforecast'])
+                    ->setTo($one->idUser->email)
+                    ->setSubject($subject);
+            }
+            if(!empty($messages)) {
+
+                Yii::$app->mailer->sendMultiple($messages);
+            }
         }
 
     }

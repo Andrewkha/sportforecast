@@ -68,13 +68,11 @@ class TournamentsController extends Controller{
 
         if(Yii::$app->user->isGuest) {
 
-            $countries = Countries::find()->orderBy('country', 'asc')->asArray()->all();
-            $countries_list = ArrayHelper::map($countries, 'id', 'country');
-
-            $searchModel = new TournamentsSearch();
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            $dataProvider = new ArrayDataProvider([
+                'allModels' => Tournaments::getAllTournaments()
+            ]);
             $dataProvider->sort = [
-                'attributes' => ['startsOn', 'is_active', 'tournament_name'],
+                'attributes' => ['startsOn'],
                 'defaultOrder' => [
                     'startsOn' => SORT_DESC
                 ]
@@ -84,9 +82,7 @@ class TournamentsController extends Controller{
             ];
 
             return $this->render('indexGuest', [
-                'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
-                'countries' => $countries_list,
             ]);
         }
 
@@ -96,22 +92,37 @@ class TournamentsController extends Controller{
 
         //active tournaments where user participates
         $k = Tournaments::getActivePendingTournamentsUserParticipate($user->id);
-        ArrayHelper::multisort($k, 'idTournament.startsOn', SORT_DESC);
         $userTournaments = new ArrayDataProvider([
             'allModels'=> $k,
+            'sort' => [
+                'attributes' => ['startsOn'],
+                'defaultOrder' => [
+                    'startsOn' => SORT_DESC
+                ]
+            ]
         ]);
 
         $k = Tournaments::finishedTournamentsUserParticipated($user->id);
-        ArrayHelper::multisort($k, 'idTournament.startsOn', SORT_DESC);
         $userFinishedTournaments = new ArrayDataProvider([
             'allModels'=> $k,
+            'sort' => [
+                'attributes' => ['startsOn'],
+                'defaultOrder' => [
+                    'startsOn' => SORT_DESC
+                ]
+            ]
         ]);
 
         $k = Tournaments::getAllTournamentsUserNotParticipate($user->id);
-        ArrayHelper::multisort($k, 'idTournament.startsOn', SORT_DESC);
         //all tournaments, those not finished - ability to start participating
         $notUserTournaments = new ArrayDataProvider([
             'allModels'=> $k,
+            'sort' => [
+                'attributes' => ['startsOn'],
+                'defaultOrder' => [
+                    'startsOn' => SORT_DESC
+                ]
+            ]
         ]);
 
         return $this->render('indexUser', [
@@ -237,11 +248,11 @@ class TournamentsController extends Controller{
 
         $post = Yii::$app->request->post();
 
-        $keys = ArrayHelper::getColumn($post['UsersTournaments'], 'id_tournament');
+        $keys = array_keys($post['UsersTournaments']);
 
         $models = UsersTournaments::find()
-            ->where(['and', ['in', 'id_tournament', $keys], ['id_user' => Yii::$app->user->id]])
-            ->indexBy('id_tournament')
+            ->where(['in', 'id', $keys])
+            ->indexBy('id')
             ->all();
 
         if(UsersTournaments::loadMultiple($models, $post)) {

@@ -319,7 +319,7 @@ $this->title = 'Сайт спортивных прогнозов';
                                     'class' => 'col-xs-7'
                                 ],
                                 'content' => function($model) {
-                                    return Html::a($model->idTournament->tournament_name, ['tournaments/details', 'id' => $model->id_tournament]);
+                                    return Html::a($model->tournament_name, ['tournaments/details', 'id' => $model->id_tournament]);
                                 },
                                 'format' => 'url',
                             ],
@@ -391,7 +391,7 @@ $this->title = 'Сайт спортивных прогнозов';
                                     'class' => 'col-xs-6'
                                 ],
                                 'content' => function($model) {
-                                    return Html::a($model->idTournament->tournament_name, ['tournaments/details', 'id' => $model->id_tournament]);
+                                    return Html::a($model->tournament_name, ['tournaments/details', 'id' => $model->id_tournament]);
                                 },
                                 'format' => 'url',
                             ],
@@ -407,7 +407,9 @@ $this->title = 'Сайт спортивных прогнозов';
                                 'options' => [
                                     'class' => 'col-xs-4'
                                 ],
-                                'attribute' => 'idUser.username'
+                                'content' => function($model) {
+                                    return (isset($model->usersTournaments[0]->idUser->username))? $model->usersTournaments[0]->idUser->username :'-';
+                                },
                             ],
 
                             [
@@ -421,7 +423,9 @@ $this->title = 'Сайт спортивных прогнозов';
                                 'options' => [
                                     'class' => 'col-xs-1'
                                 ],
-                                'attribute' => 'points',
+                                'content' => function($model) {
+                                    return (isset($model->usersTournaments[0]->points))? $model->usersTournaments[0]->points :'-';
+                                },
                             ],
 
                             [

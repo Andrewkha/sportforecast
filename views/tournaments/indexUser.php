@@ -54,6 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ]);?>
 
             <div class="row">
+
                 <?= extendedGridView::widget([
                     'dataProvider' => $userTournaments,
                     'bordered' => false,
@@ -76,7 +77,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'class' => 'col-xs-2 col-lg-3'
                             ],
                             'content' => function($model) {
-                                return Html::a($model->idTournament->tournament_name, ['tournaments/details', 'id' => $model->id_tournament]);
+                                return Html::a($model->tournament_name, ['tournaments/details', 'id' => $model->id_tournament]);
                             },
 
                             'format' => 'url',
@@ -84,7 +85,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
                         [
                             'header' => 'Страна',
-                            'attribute' => 'idTournament.country0.country',
                             'contentOptions' => [
                                 'align' => 'center',
                                 'style' => 'vertical-align:middle',
@@ -95,11 +95,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             'options' => [
                                 'class' => 'col-xs-2 col-lg-1'
                             ],
+                            'attribute' => 'country0.country'
                         ],
 
                         [
                             'header' => 'Статус',
-                            'attribute' => 'idTournament.status',
+                            'attribute' => 'status',
                             'options' => [
                                 'class' => 'col-xs-2 col-lg-1'
                             ],
@@ -162,7 +163,9 @@ $this->params['breadcrumbs'][] = $this->title;
                             'options' => [
                                 'class' => 'col-xs-1 col-lg-2'
                             ],
-                            'attribute' => 'idUser.username',
+                            'content' => function($model) {
+                                return (isset($model->usersTournaments[0]->idUser->username))? $model->usersTournaments[0]->idUser->username :'-';
+                            },
 
                         ],
 
@@ -179,11 +182,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             'options' => [
                                 'class' => 'col-xs-1'
                             ],
-                            'attribute' => 'points',
+                            'content' => function($model) {
+                                return (isset($model->usersTournaments[0]->points))? $model->usersTournaments[0]->points :'-';
+                            },
                         ],
 
                         [
-                            'attribute' => 'notification',
                             'hAlign' => 'center',
                             'vAlign' => 'middle',
                             'options' => [
@@ -194,8 +198,8 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
                             'content' => function($model) use ($form){
 
-                                return Html::activeHiddenInput($model, "[$model->id_tournament]id_tournament").$form->field($model, "[$model->id_tournament]notification")->checkbox(['label' => '']);
-
+                                $user = \app\models\users\UsersTournaments::find()->findModel($model->id_tournament, Yii::$app->user->id)->one();
+                                return Html::activeCheckbox($user, "[$user->id]notification");
                             },
                             'header' => 'Новости'
                         ],
@@ -255,7 +259,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'class' => 'col-xs-3 col-lg-5'
                         ],
                         'content' => function($model) {
-                            return Html::a($model->idTournament->tournament_name, ['tournaments/details', 'id' => $model->id_tournament]);
+                            return Html::a($model->tournament_name, ['tournaments/details', 'id' => $model->id_tournament]);
                         },
 
                         'format' => 'url',
@@ -270,7 +274,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'headerOptions' => [
                             'style' => 'text-align:center',
                         ],
-                        'attribute' => 'idTournament.country0.country',
+                        'attribute' => 'country0.country',
                         'options' => [
                             'class' => 'col-xs-2 col-lg-1'
                         ],
@@ -323,12 +327,14 @@ $this->params['breadcrumbs'][] = $this->title;
                         'options' => [
                             'class' => 'col-xs-2'
                         ],
-                        'attribute' => 'idUser.username',
+                        'content' => function($model) {
+                            return (isset($model->usersTournaments[0]->idUser->username))? $model->usersTournaments[0]->idUser->username :'-';
+                        },
 
                     ],
 
                     [
-                        'header' => 'Очки лидера',
+                        'header' => 'Очки победителя',
                         'contentOptions' => [
                             'style' => 'vertical-align:middle',
                             'align' => 'center'
@@ -339,7 +345,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         'options' => [
                             'class' => 'col-xs-1'
                         ],
-                        'attribute' => 'points',
+                        'content' => function($model) {
+                            return (isset($model->usersTournaments[0]->points))? $model->usersTournaments[0]->points :'-';
+                        },
                     ],
                 ],
             ]); ?>
@@ -371,7 +379,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'class' => 'col-xs-3'
                         ],
                         'content' => function($model) {
-                            return Html::a($model->idTournament->tournament_name, ['tournaments/details', 'id' => $model->id_tournament]);
+                            return Html::a($model->tournament_name, ['tournaments/details', 'id' => $model->id_tournament]);
                         },
 
                         'format' => 'url',
@@ -379,7 +387,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     [
                         'header' => 'Страна',
-                        'attribute' => 'idTournament.country0.country',
+                        'attribute' => 'country0.country',
                         'contentOptions' => [
                             'align' => 'center',
                             'style' => 'vertical-align:middle',
@@ -396,7 +404,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'header' => 'Статус',
                         'content' => function($model) {
-                            return $model->idTournament->status;
+                            return $model->status;
                         },
                         'options' => [
                             'class' => 'col-xs-2'
@@ -423,7 +431,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         'options' => [
                             'class' => 'col-xs-2'
                         ],
-                        'attribute' => 'idUser.username',
+                        'content' => function($model) {
+                            return (isset($model->usersTournaments[0]->idUser->username))? $model->usersTournaments[0]->idUser->username :'-';
+                        },
 
                     ],
 
@@ -440,7 +450,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         'options' => [
                             'class' => 'col-xs-1'
                         ],
-                        'attribute' => 'points',
+                        'content' => function($model) {
+                            return (isset($model->usersTournaments[0]->points))? $model->usersTournaments[0]->points :'-';
+                        },
                     ],
 
                     [
@@ -457,8 +469,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         'content' => function($model) {
 
-                            if ($model['idTournament']['is_active'] == Tournaments::GOING ||
-                                $model['idTournament']['is_active'] == Tournaments::NOT_STARTED
+                            if ($model->is_active == Tournaments::GOING ||
+                                $model->is_active == Tournaments::NOT_STARTED
                             )
 
                                 return Html::a('Участвовать!', ['tournaments/participate', 'id' => $model->id_tournament], [

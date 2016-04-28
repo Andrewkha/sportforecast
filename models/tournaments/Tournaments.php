@@ -85,6 +85,7 @@ class Tournaments extends \yii\db\ActiveRecord
         if(isset($changedAttributes['is_active']) && $changedAttributes['is_active'] != self::FINISHED && $this->is_active == self::FINISHED) {
 
             News::updateAll(['archive' => News::ARCHIVE_TRUE], ['id_tournament' => $this->id_tournament] );
+            //todo calculate additional points
         }
 
         if($insert) {

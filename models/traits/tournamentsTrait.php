@@ -101,6 +101,18 @@ trait tournamentsTrait
 
     }
 
+    //get list of all tournaments
+
+    public static function getAllTournaments()
+    {
+        $tournaments = self::find()->column();
+
+        if(!empty($tournaments))
+        {
+            return self::unionQueryPrep($tournaments);
+        } else
+            return [];
+    }
     //get list of all tournaments user participates in
 
     public static function finishedTournamentsUserParticipated($user)
@@ -191,20 +203,15 @@ trait tournamentsTrait
     {
         $query = [];
         foreach ($array as $one)
-            $query[] = UsersTournaments::find()
-                ->where(['{{%users_tournaments}}.id_tournament' => $one])
-                ->joinWith('idTournament.country0')
-                ->joinWith('idUser')
-                ->orderBy(['points' => SORT_DESC])
-                ->limit(1);
+            $query[] = Tournaments::find()
+                ->where(['{{%tournaments}}.id_tournament' => $one])
+                ->joinWith(['usersTournaments' => function($query) {
+                    $query->with('idUser')->orderBy(['points' => SORT_DESC])->limit(1);
+                }])
+                ->with('country0')
+                ->one();
 
-        $count = count($query);
-
-        $toExecute = $query[0];
-        for($i = 0; $i < $count - 1; $i++)
-            $toExecute = $toExecute->union($query[$i + 1]);
-
-        return $toExecute->all();
+        return $query;
     }
 
     public static function generateFinalNews($tournament) {

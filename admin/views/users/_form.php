@@ -92,7 +92,7 @@ use yii\grid\GridView;
             ],
 
             [
-                'attribute' => 'idTournament.tournament_name',
+                'attribute' => 'tournament_name',
                 'contentOptions' => [
                     'align' => 'center',
                     'style' => 'vertical-align:middle',
@@ -107,7 +107,7 @@ use yii\grid\GridView;
             ],
 
             [
-                'attribute' => 'idTournament.country0.country',
+                'attribute' => 'country0.country',
                 'contentOptions' => [
                     'align' => 'center',
                     'style' => 'vertical-align:middle',
@@ -122,7 +122,8 @@ use yii\grid\GridView;
             ],
 
             [
-                'attribute' => 'idTournament.is_active',
+                'attribute' => 'status',
+                'header' => 'Статус',
                 'contentOptions' => [
                     'align' => 'center',
                     'style' => 'vertical-align:middle',
@@ -130,9 +131,6 @@ use yii\grid\GridView;
                 'headerOptions' => [
                     'style' => 'text-align:center',
                 ],
-                'content' => function($model) {
-                    return $model->idTournament->status;
-                },
                 'filter' => false,
                 'options' => [
                     'class' => 'col-xs-2',
@@ -140,7 +138,7 @@ use yii\grid\GridView;
             ],
 
             [
-                'attribute' => 'userPosition',
+                'header' => 'Место',
                 'contentOptions' => [
                     'align' => 'center',
                     'style' => 'vertical-align:middle',
@@ -159,6 +157,7 @@ use yii\grid\GridView;
 
             [
                 'attribute' => 'userPoints',
+                'header' => 'Очки',
                 'contentOptions' => [
                     'align' => 'center',
                     'style' => 'vertical-align:middle',
@@ -177,6 +176,7 @@ use yii\grid\GridView;
 
             [
                 'attribute' => 'notification',
+                'header' => 'Уведомления',
                 'contentOptions' => [
                     'align' => 'center',
                     'style' => 'vertical-align:middle',
@@ -184,8 +184,8 @@ use yii\grid\GridView;
                 'headerOptions' => [
                     'style' => 'text-align:center',
                 ],
-                'content' => function($model) {
-                    return $model->getSubscriptionStatus();
+                'content' => function($model1) use ($model) {
+                    return (\app\models\users\UsersTournaments::find()->findModel($model1->id_tournament,$model->id)->one()->getSubscriptionStatus());
                 },
                 'filter' => false,
                 'options' => [

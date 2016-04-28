@@ -98,6 +98,12 @@ class SiteController extends Controller
         $tournaments = new ArrayDataProvider([
             'allModels' => Tournaments::getActivePendingTournamentsNotParticipate(Yii::$app->user->id),
             'pagination' => false,
+            'sort' => [
+                'attributes' => ['startsOn'],
+                'defaultOrder' => [
+                    'startsOn' => SORT_DESC
+                ]
+            ]
         ]);
 
         $futureGames = Games::getAllFutureGamesWithForecast(Yii::$app->user->id);
