@@ -69,4 +69,5 @@ use yii\helpers\Url;
     ]
 ])
 ;?>
+<br>
 <p>Полная информация о турнире доступна на его <?= Html::a('странице', Url::to(Yii::$app->params['url']."/tournaments/$tournament->id_tournament", true));?></p>

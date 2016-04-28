@@ -18,7 +18,7 @@ else
     $expired = false;
 
 $subtitle = ($expired)? 'Прием прогнозов на призеров окончен '.date('d.m.y', $tournament->wfDueTo) :
-    'Вы можете сделать прогноз на призеров турнира до '.date('d.m.y', $tournament->wfDueTo);
+    'Вы можете сделать прогноз на призеров турнира до '.date('d.m.y', $tournament->wfDueTo). ' и заработать дополнительные очки';
 ?>
 <div class = 'col-xs-12 col-md-5 col-lg-4 col-lg-offset-1'>
     <p class = 'text-center' style="font-size:1.5em; color: #777">Прогноз на призеров турнира</p>

@@ -61,8 +61,11 @@ $this->title = 'Сайт спортивных прогнозов';
                 <div class = "col-xs-12">
                     <h3 class = 'text-center'>Ближашие матчи</h3>
                     <?php foreach($futureGames as $tournament):?>
-
+                        <?php $tournamentModel = \app\models\tournaments\Tournaments::findOne(['id_tournament' => $tournament['id_tournament']]);?>
                         <?php $content = '';?>
+                        <?php if(time() < $tournamentModel->wfDueTo):?>
+                            <?php $content .= "Вы можете ". Html::a('сделать прогноз на призеров турнира ', ['tournaments/details', 'id' => $tournament['id_tournament']])."и заработать дополнительные очки"?>
+                        <?php endif;?>
                         <?php $content .= "<p class = 'text-right'>".Html::a("<i class = 'fa fa-list-alt'></i> Все игры", ['tournaments/details', 'id' => $tournament['id_tournament']])."</p>";?>
                             <?php foreach($tournament['games'] as $k=> $tour):?>
                             <?php $form = ActiveForm::begin([
