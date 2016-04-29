@@ -26,6 +26,11 @@ class Top3TeamsForecastQuery extends \yii\db\ActiveQuery
             ->andWhere(['forecasted_position' => $position]);
     }
 
+    public function byTournament($id)
+    {
+        return $this->where(['id_tournament' => $id]);
+    }
+
     public function all($db = null)
     {
         return parent::all($db);

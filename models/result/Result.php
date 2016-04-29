@@ -107,6 +107,35 @@ class Result extends \yii\db\ActiveRecord
         return $standings;
     }
 
+    public static function getWinners($id)
+    {
+        $db = Yii::$app->db;
+        $query = "SELECT res.id as participant, res.id as id, res.id_team, sf_teams.team_logo, sf_teams.team_name, res.id_tournament, pts, games_played  from sf_team_tournaments as res
+
+                    left Join
+
+                    (SELECT id_team, team, id_tournament, sum(points) as pts, count(team) as games_played, team_logo, team_name from
+
+                    (SELECT home_id as id_team, home_team as team, id_tournament, points_home as points, home_logo as team_logo, home_team as team_name FROM sf_result
+
+                        where (points_home is not null and id_tournament = $id)
+                    UNION ALL
+                        SELECT guest_id, guest_team, id_tournament, points_guest as points, guest_logo as team_logo, guest_team as team_name from sf_result
+                        where (points_guest is not null and id_tournament = $id)) trn
+
+                    group BY team
+                    ) tt
+
+                    on res.id_team = tt.id_team
+
+                    join sf_teams on res.id_team = sf_teams.id_team
+                    where res.id_tournament = $id
+                    order by pts DESC 
+                    limit 3";
+
+        $standings = $db->createCommand($query)->queryAll();
+        return $standings;
+    }
 
     public static function getGamesTourTournament($tour, $tournament) {
 
