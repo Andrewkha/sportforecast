@@ -2,6 +2,7 @@
 
 namespace app\models\games;
 
+use app\models\forecasts\Top3TeamsForecast;
 use Yii;
 
 use app\models\tournaments\Tournaments;
@@ -161,8 +162,7 @@ class Games extends ActiveRecord
             if($tournamentModel->num_tours == $this->tour) {
                 $tournamentModel->is_active = Tournaments::FINISHED;
                 $tournamentModel->save(false);
-                
-                //todo put events to the winners forecast tables for the tournament
+
             }
 
             if(!TourResultNotifications::ifExists($this->tour, $tournament)) {

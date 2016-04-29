@@ -72,7 +72,7 @@ Modal::end();
             ],
             'hAlign' => 'center',
             'content' => function($model){
-                return ($model->points === NULL)? '-' : $model->points;
+                return ($model->totalPoints === NULL)? '-' : $model->totalPoints;
             },
             'headerOptions' => [
                 'style' => 'text-align:center',

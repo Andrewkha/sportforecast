@@ -54,6 +54,19 @@ class Top3TeamsForecast extends \yii\db\ActiveRecord
         }
     }
 
+    public static function getAdditionalPoints($user, $tournament)
+    {
+        $forecast = self::find()->where(['id_tournament' => $tournament])->andWhere(['id_user' => $user])->all();
+
+        $summ = 0;
+
+        foreach ($forecast as $one)
+        {
+            $summ += $one->pointsForEvent;
+        }
+        return $summ;
+    }
+
     /**
      * @inheritdoc
      */

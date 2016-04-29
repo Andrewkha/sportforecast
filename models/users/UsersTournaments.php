@@ -2,6 +2,7 @@
 
 namespace app\models\users;
 
+use app\models\forecasts\Top3TeamsForecast;
 use app\models\query\UsersTournamentsQuery;
 use Yii;
 use app\models\tournaments\Tournaments;
@@ -79,6 +80,11 @@ class UsersTournaments extends \yii\db\ActiveRecord
         return $this->hasOne(Tournaments::className(), ['id_tournament' => 'id_tournament']);
     }
 
+    public function getWinnersForecast()
+    {
+        return $this->hasMany(Top3TeamsForecast::className(), ['id_tournament' => 'id_tournament', 'id_user' => 'id_user']);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -89,12 +95,7 @@ class UsersTournaments extends \yii\db\ActiveRecord
 
     public function getTotalPoints()
     {
-        //if tournament not finished - from model, else add points for guessing 3 top
-        if($this->idTournament->is_active != Tournaments::FINISHED)
-            return $this->points;
-        else
-            return $this->points;
-        //todo  add additional forecast once done
+        return $this->points;
     }
 
     public function getPosition()

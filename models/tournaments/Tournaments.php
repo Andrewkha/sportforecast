@@ -6,6 +6,7 @@ namespace app\models\tournaments;
 use app\models\games\Games;
 use app\models\news\News;
 use app\models\teams\Teams;
+use app\models\forecasts\Top3TeamsForecast;
 use app\models\users\UsersTournaments;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
@@ -85,7 +86,12 @@ class Tournaments extends \yii\db\ActiveRecord
         if(isset($changedAttributes['is_active']) && $changedAttributes['is_active'] != self::FINISHED && $this->is_active == self::FINISHED) {
 
             News::updateAll(['archive' => News::ARCHIVE_TRUE], ['id_tournament' => $this->id_tournament] );
-            //todo calculate additional points
+
+            //assigning Events for winners forecast
+            Top3TeamsForecast::setEventForTournament($this->id_tournament);
+
+            //adding additional points to the total points field of UserTournaments model
+            $this->assignAdditionalPoints();
         }
 
         if($insert) {
@@ -282,5 +288,29 @@ class Tournaments extends \yii\db\ActiveRecord
         $min = substr($str, 0, 2);
 
         return mktime($hour, $min , 0, $month, $day, $year);
+    }
+
+    private function assignAdditionalPoints()
+    {
+        $userTournamentsModels = UsersTournaments::find()->with('winnersForecast')->where(['id_tournament' => $this->id_tournament])->all();
+
+        foreach($userTournamentsModels as $one)
+        {
+            $sum = 0;
+            $bonus = 0;
+
+            foreach ($one->winnersForecast as $item)
+            {
+                $bonus += $item->event;
+                $sum += $item->pointsForEvent;
+            }
+
+            if($bonus == 3*Top3TeamsForecast::TEAM_POSITION)
+                $one->points += Top3TeamsForecast::POINTS_ALL_3_WINNERS;
+            $one->points += $sum;
+
+            $one->save(false);
+        }
+
     }
 }
