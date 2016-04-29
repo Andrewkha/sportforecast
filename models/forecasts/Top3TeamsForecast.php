@@ -3,6 +3,7 @@
 namespace app\models\forecasts;
 
 use app\models\result\Result;
+use app\models\tournaments\TeamTournaments;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
@@ -135,6 +136,11 @@ class Top3TeamsForecast extends \yii\db\ActiveRecord
         return $this->hasOne(\app\models\tournaments\Tournaments::className(), ['id_tournament' => 'id_tournament']);
     }
 
+    public function getTeam()
+    {
+        return $this->hasOne(TeamTournaments::className(),['id' => 'id_participant_team'] );
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -164,5 +170,29 @@ class Top3TeamsForecast extends \yii\db\ActiveRecord
 
             self::updateAll(['event' => NULL], ['and', ['id_tournament' => $id_tournament], ['not in', 'id_participant_team', $winners]]);
         }
+    }
+    
+    public static function getClarifications($user, $tournament)
+    {
+        $details = [];
+        $models = self::find()->where(['id_user' => $user, 'id_tournament' => $tournament])->with('team.idTeam')->all();
+
+        $bonus = 0;
+
+        foreach ($models as $one)
+        {
+            if($one->event == self::TEAM_IN_TOP_3)
+                $details[] = "Попадание в тройку призеров команды {$one->team->idTeam->team_name} - ".self::POINTS_TEAM_IN_TOP_3." очков";
+
+            if($one->event == self::TEAM_POSITION)
+                $details[] = "{$one->forecasted_position}-е место команды {$one->team->idTeam->team_name} - ".self::POINTS_TEAM_POSITION." очков";
+
+            $bonus += $one->event;
+        }
+
+        if($bonus == 3*self::TEAM_POSITION)
+            $details[] = "Дополнительный бонус за правильно угаданную тройку призеров ".Top3TeamsForecast::POINTS_ALL_3_WINNERS. " очков";
+
+        print_r($details);
     }
 }
