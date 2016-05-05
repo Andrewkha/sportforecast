@@ -193,6 +193,6 @@ class Top3TeamsForecast extends \yii\db\ActiveRecord
         if($bonus == 3*self::TEAM_POSITION)
             $details[] = "Дополнительный бонус за правильно угаданную тройку призеров ".Top3TeamsForecast::POINTS_ALL_3_WINNERS. " очков";
 
-        print_r($details);
+        return $details;
     }
 }

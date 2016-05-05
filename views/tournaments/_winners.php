@@ -45,7 +45,9 @@ $subtitle = ($expired)? 'Прием прогнозов на призеров о�
         <?= (!$expired)? Html::submitButton('Сохранить', ['type' => 'button', 'class' => ['btn btn-primary pull-right']]) : NULL;?>
     <?php ActiveForm::end();?>
     <br>
-    <br>
-    <br>
+    <?php if($tournament->is_active == \app\models\tournaments\Tournaments::FINISHED) :?>
+        <p><b>Всего дополнительных очков: <?= $totalAdditionalPoints;?></b></p>
+        <p><?= $additionalPoints;?></p>
+    <?php endif;?>
     <br>
 </div>

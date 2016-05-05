@@ -89,7 +89,7 @@ use yii\bootstrap\Modal;
         Modal::begin([
             'header' => '<h4>Детали прогноза</h4>',
             'id' => 'modal',
-            'size' => 'modal-md',
+            'size' => 'SIZE_LARGE',
         ]);
         echo "<div id = 'modalContent'></div>";
         Modal::end();
@@ -99,7 +99,7 @@ use yii\bootstrap\Modal;
     Modal::begin([
         'header' => '<h4>Прогноз по турам</h4>',
         'id' => 'mU',
-        'size' => 'modal-sm',
+        'size' => 'SIZE_LARGE',
     ]);
     echo "<div id = 'modalUserContent'></div>";
     Modal::end();

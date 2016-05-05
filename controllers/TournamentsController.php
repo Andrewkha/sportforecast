@@ -189,13 +189,34 @@ class TournamentsController extends Controller{
             }
         }
 
-        return $this->render($viewFile, compact('tournament', 'teamParticipants', 'forecasters', 'tour_list', 'tourGames', 'winners'));
+        $data = compact('tournament', 'teamParticipants', 'forecasters', 'tour_list', 'tourGames', 'winners');
+
+        if($tournament->is_active == Tournaments::FINISHED)
+        {
+            $data['additionalPoints'] = implode('</br>', Top3TeamsForecast::getClarifications($user->id, $id));
+            $userTournamentsModel = UsersTournaments::find()
+                ->where(['id_tournament' => $id])
+                ->andWhere(['id_user' => $user->id])
+                ->with('winnersForecast')
+                ->one();
+
+            $data['totalAdditionalPoints'] = $userTournamentsModel->calculateAdditionalPoints();
+        }
+
+        else
+        {
+            $data['additionalPoints'] = '';
+            $data['totalAdditionalPoints'] = '';
+        }
+
+        return $this->render($viewFile, $data);
 
     }
 
     //detailed information for tournament forecast for the user
     public function actionUser($user, $tournament) {
 
+        $userModel = Users::findOne($user);
         $forecastStatus = Forecasts::getUserForecastStatus($tournament, $user);
 
         $forecast = new ArrayDataProvider([
@@ -203,9 +224,41 @@ class TournamentsController extends Controller{
             'pagination' => false,
         ]);
 
-        $user = Users::findOne($user);
+        $winnersForecast = Top3TeamsForecast::find()
+            ->where(['id_tournament' => $tournament])
+            ->andWhere(['id_user' => $user])
+            ->with('team.idTeam')
+            ->orderBy(['forecasted_position' => SORT_ASC])
+            ->asArray()
+            ->all();
 
-        return $this->renderAjax('user', ['forecast' => $forecast, 'user' => $user]);
+        $isFinished = Tournaments::findOne($tournament)->is_active == Tournaments::FINISHED;
+
+        $winnersForecastDataProvider = new ArrayDataProvider([
+            'allModels' => $winnersForecast,
+            'pagination' => false,
+        ]);
+
+        $data = ['forecast' => $forecast,
+            'user' => $userModel,
+            'winnersForecast' => $winnersForecastDataProvider,
+            'isFinished' => $isFinished,
+        ];
+
+        if($isFinished)
+        {
+            $userTournamentModel = UsersTournaments::find()
+                ->where(['id_user' => $user])
+                ->andWhere(['id_tournament' => $tournament])
+                ->with('winnersForecast')
+                ->one();
+
+            $data['winnersForecastDetails'] = implode('</br>', Top3TeamsForecast::getClarifications($user, $tournament));
+            $data['totalAdditionalPoints'] = $userTournamentModel->calculateAdditionalPoints();
+        }
+
+        return $this->renderAjax('user', $data);
+
     }
 
     public function actionGames($id) {

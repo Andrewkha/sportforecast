@@ -296,21 +296,9 @@ class Tournaments extends \yii\db\ActiveRecord
 
         foreach($userTournamentsModels as $one)
         {
-            $sum = 0;
-            $bonus = 0;
-
-            foreach ($one->winnersForecast as $item)
-            {
-                $bonus += $item->event;
-                $sum += $item->pointsForEvent;
-            }
-
-            if($bonus == 3*Top3TeamsForecast::TEAM_POSITION)
-                $one->points += Top3TeamsForecast::POINTS_ALL_3_WINNERS;
-            $one->points += $sum;
+            $one->points += $one->calculateAdditionalPoints();
 
             $one->save(false);
         }
-
     }
 }

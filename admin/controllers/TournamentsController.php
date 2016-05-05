@@ -2,6 +2,8 @@
 
 namespace app\admin\controllers;
 
+use app\models\forecasts\Top3TeamsForecast;
+use app\models\users\UsersTournaments;
 use Yii;
 use yii\base\Exception;
 use yii\data\ArrayDataProvider;
@@ -122,6 +124,7 @@ class TournamentsController extends Controller
     //detailed information for tournament forecast for the user
     public function actionUser($user, $tournament) {
 
+        $userModel = Users::findOne($user);
         $forecastStatus = Forecasts::getUserForecastStatus($tournament, $user);
 
         $forecast = new ArrayDataProvider([
@@ -129,9 +132,40 @@ class TournamentsController extends Controller
             'pagination' => false,
         ]);
 
-        $user = Users::findOne($user);
+        $winnersForecast = Top3TeamsForecast::find()
+            ->where(['id_tournament' => $tournament])
+            ->andWhere(['id_user' => $user])
+            ->with('team.idTeam')
+            ->orderBy(['forecasted_position' => SORT_ASC])
+            ->asArray()
+            ->all();
 
-        return $this->renderAjax('user', ['forecast' => $forecast, 'user' => $user]);
+        $isFinished = Tournaments::findOne($tournament)->is_active == Tournaments::FINISHED;
+
+        $winnersForecastDataProvider = new ArrayDataProvider([
+            'allModels' => $winnersForecast,
+            'pagination' => false,
+        ]);
+
+        $data = ['forecast' => $forecast,
+            'user' => $userModel,
+            'winnersForecast' => $winnersForecastDataProvider,
+            'isFinished' => $isFinished,
+        ];
+
+        if($isFinished)
+        {
+            $userTournamentModel = UsersTournaments::find()
+                ->where(['id_user' => $user])
+                ->andWhere(['id_tournament' => $tournament])
+                ->with('winnersForecast')
+                ->one();
+            
+            $data['winnersForecastDetails'] = implode('</br>', Top3TeamsForecast::getClarifications($user, $tournament));
+            $data['totalAdditionalPoints'] = $userTournamentModel->calculateAdditionalPoints();
+        }
+
+        return $this->renderAjax('user', $data);
     }
 
     //adding the participants to the tournament we edit

@@ -12,7 +12,7 @@ use app\models\users\Users;
 Modal::begin([
     'header' => '<h4>Прогноз по турам</h4>',
     'id' => 'mU',
-    'size' => 'modal-sm',
+    'size' => 'SIZE_LARGE',
 ]);
 echo "<div id = 'modalUserContent'></div>";
 Modal::end();

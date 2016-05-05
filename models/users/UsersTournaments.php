@@ -154,4 +154,21 @@ class UsersTournaments extends \yii\db\ActiveRecord
 
         return $result;
     }
+
+    public function calculateAdditionalPoints()
+    {
+        $sum = 0;
+        $bonus = 0;
+
+        foreach ($this->winnersForecast as $item)
+        {
+            $bonus += $item->event;
+            $sum += $item->pointsForEvent;
+        }
+
+        if($bonus == 3*Top3TeamsForecast::TEAM_POSITION)
+            $sum += Top3TeamsForecast::POINTS_ALL_3_WINNERS;
+
+        return $sum;
+    }
 }
