@@ -94,6 +94,16 @@ class Tournaments extends \yii\db\ActiveRecord
             $this->assignAdditionalPoints();
         }
 
+        //if setting tournament back to active from finished, need to remove calculated additional points and clean additional forecast events
+
+        if(isset($changedAttributes['is_active']) && $changedAttributes['is_active'] == self::FINISHED && $this->is_active == self::GOING) {
+
+            //removing additional points to the total points field of UserTournaments model
+            $this->removeAdditionalPoints();
+            //assigning Events for winners forecast to NULL
+            Top3TeamsForecast::clearEventForTournament($this->id_tournament);
+        }
+        
         if($insert) {
 
             $news = new News();
@@ -297,6 +307,18 @@ class Tournaments extends \yii\db\ActiveRecord
         foreach($userTournamentsModels as $one)
         {
             $one->points += $one->calculateAdditionalPoints();
+
+            $one->save(false);
+        }
+    }
+
+    private function removeAdditionalPoints()
+    {
+        $userTournamentsModels = UsersTournaments::find()->with('winnersForecast')->where(['id_tournament' => $this->id_tournament])->all();
+
+        foreach($userTournamentsModels as $one)
+        {
+            $one->points -= $one->calculateAdditionalPoints();
 
             $one->save(false);
         }

@@ -171,6 +171,11 @@ class Top3TeamsForecast extends \yii\db\ActiveRecord
             self::updateAll(['event' => NULL], ['and', ['id_tournament' => $id_tournament], ['not in', 'id_participant_team', $winners]]);
         }
     }
+
+    public static function clearEventForTournament($id_tournament)
+    {
+        self::updateAll(['event' => NULL], ['id_tournament' =>$id_tournament]);
+    }
     
     public static function getClarifications($user, $tournament)
     {
