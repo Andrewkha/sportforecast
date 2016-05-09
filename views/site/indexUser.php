@@ -59,7 +59,7 @@ $this->title = 'Сайт спортивных прогнозов';
 
             <div class="row">
                 <div class = "col-xs-12">
-                    <h3 class = 'text-center'>Ближашие матчи</h3>
+                    <h3 class = 'text-center'>Ближайшие матчи</h3>
                     <?php foreach($futureGames as $tournament):?>
                         <?php $tournamentModel = \app\models\tournaments\Tournaments::findOne(['id_tournament' => $tournament['id_tournament']]);?>
                         <?php $content = '';?>

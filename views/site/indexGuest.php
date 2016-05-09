@@ -38,7 +38,7 @@ if(Yii::$app->session->hasFlash('success')) {
         <div class = "col-xs-12 col-xs-offset-0 col-md-6 col-md-offset-1">
             <div class="row">
                 <div class = "col-xs-12">
-                    <h3 class = 'text-center'>Ближашие матчи</h3>
+                    <h3 class = 'text-center'>Ближайшие матчи</h3>
                     <?php foreach($futureGames as $tournament):?>
 
                         <?php $content = '';?>
