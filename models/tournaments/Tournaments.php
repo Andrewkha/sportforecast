@@ -175,7 +175,7 @@ class Tournaments extends \yii\db\ActiveRecord
         $teamIDs = ArrayHelper::getColumn($teamTournament, 'id');
 
         $url = $this->autoProcessURL;
-        //$url = 'pl.html';
+        //$url = 'web/pl.html';
         $html = new Document($url, true);
 
         $count = $this->num_tours;

@@ -21,6 +21,9 @@ use yii\helpers\Html;
         'dataProvider' => $forecasters,
         'caption' => 'Победители прогноза',
         'summary' => false,
+        'showHeader' => false,
+        'toggleData' => false,
+        'filterUrl' => false,
         'options' => [
             'class' => 'col-xs-12 col-md-5 col-lg-5',
         ],
@@ -74,6 +77,9 @@ use yii\helpers\Html;
             'class' => 'col-xs-12 col-md-5 col-md-offset-1 col-lg-6 col-lg-offset-1'
         ],
         'summary' => false,
+        'showHeader' => false,
+        'toggleData' => false,
+        'filterUrl' => false,
         'caption' => 'Турнирная таблица',
         'columns' =>  [
             [

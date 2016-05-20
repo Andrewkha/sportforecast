@@ -20,6 +20,9 @@ use yii\helpers\Url;
     'dataProvider' => $standings,
     'caption' => 'Победители прогноза',
     'summary' => false,
+    'showHeader' => false,
+    'toggleData' => false,
+    'filterUrl' => false,
     'options' => [
         'class' => 'col-xs-12 col-md-5 col-lg-5',
     ],
