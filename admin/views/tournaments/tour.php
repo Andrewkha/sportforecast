@@ -48,28 +48,16 @@ use yii\grid\GridView;
         ],
 
         [
-            'attribute' => 'home_score_forecast',
-            'header' => '',
+            //'attribute' => 'home_score_forecast',
+            'content' => function($model) {
+                return $model['home_score_forecast'].' - '.$model['guest_score_forecast'];
+            },
+            'header' => 'Счет',
             'headerOptions' => [
                 'style' => 'text-align:center',
             ],
             'options' => [
-                'class' => 'col-sm-1',
-            ],
-            'contentOptions' => [
-                'align' => 'center',
-                'style' => 'vertical-align:middle',
-            ],
-        ],
-
-        [
-            'attribute' => 'guest_score_forecast',
-            'header' => '',
-            'headerOptions' => [
-                'style' => 'text-align:center',
-            ],
-            'options' => [
-                'class' => 'col-sm-1',
+                'class' => 'col-sm-2',
             ],
             'contentOptions' => [
                 'align' => 'center',
