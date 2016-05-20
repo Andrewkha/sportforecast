@@ -200,7 +200,8 @@ class TournamentsController extends Controller{
                 ->with('winnersForecast')
                 ->one();
 
-            $data['totalAdditionalPoints'] = $userTournamentsModel->calculateAdditionalPoints();
+            if(!empty($userTournamentsModel))
+                $data['totalAdditionalPoints'] = $userTournamentsModel->calculateAdditionalPoints();
         }
 
         else
