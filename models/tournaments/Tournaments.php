@@ -186,25 +186,28 @@ class Tournaments extends \yii\db\ActiveRecord
         for($i = 0; $i < $count; $i++) {
 
             $tour = $html->find('h3.titleH3')[$i]->text();
-
+            $tour =  preg_replace("/[^0-9]/", '', $tour);
 
             $resultTable = $html->find('table.stat-table')[$i];
 
             foreach($resultTable->find('tbody tr') as $k => $one) {
 
-                if((($this->autoTimeToUnix($one->find('td.name-td')[0]->text()) > time() - 60*60*24*7*2)))
+                if($this->autoTimeToUnix($one->find('td.name-td')[0]->text()) > time() - 60*60*24*7*2 && $tour <= $count)
                 {
-                    if(isset($aliases[$one->find('td.owner-td a.player')[0]->text()]) && isset($aliases[$one->find('td.guests-td a.player')[0]->text()])) {
+                    if(isset($one->find('td.owner-td a.player')[0]) && isset($one->find('td.guests-td a.player')[0]))
+                    {
+                        if(isset($aliases[$one->find('td.owner-td a.player')[0]->text()]) && isset($aliases[$one->find('td.guests-td a.player')[0]->text()])) {
 
-                        $gamesFromWeb[$j]['id_team_home'] = (int)$aliases[$one->find('td.owner-td a.player')[0]->text()];
-                        $gamesFromWeb[$j]['id_team_guest'] = (int)$aliases[$one->find('td.guests-td a.player')[0]->text()];
-                        $gamesFromWeb[$j]['date_time_game'] = (int)$this->autoTimeToUnix($one->find('td.name-td')[0]->text());
-                        $gamesFromWeb[$j]['tour'] = (int)trim($tour, "-ый тур");
-                        $gamesFromWeb[$j]['score_home'] = (int)(trim(stristr($one->find('td.score-td noindex')[0]->text(), ':', true)) == '-') ? NULL : trim(stristr($one->find('td.score-td noindex')[0]->text(), ':', true));
-                        $gamesFromWeb[$j]['score_guest'] = (int)(trim(trim(stristr($one->find('td.score-td noindex')[0]->text(), ':'), "\t\n\r\0\x0B\x3A")) == '-') ? NULL : trim(trim(stristr($one->find('td.score-td noindex')[0]->text(), ':'), "\t\n\r\0\x0B\x3A"));
-                        $j++;
-                    } else {
-                        throw new Exception('Error during alias parsing '.$one->find('td.owner-td a.player')[0]->text().' or '.$one->find('td.guests-td a.player')[0]->text());
+                            $gamesFromWeb[$j]['id_team_home'] = (int)$aliases[$one->find('td.owner-td a.player')[0]->text()];
+                            $gamesFromWeb[$j]['id_team_guest'] = (int)$aliases[$one->find('td.guests-td a.player')[0]->text()];
+                            $gamesFromWeb[$j]['date_time_game'] = (int)$this->autoTimeToUnix($one->find('td.name-td')[0]->text());
+                            $gamesFromWeb[$j]['tour'] = $tour;
+                            $gamesFromWeb[$j]['score_home'] = (int)(trim(stristr($one->find('td.score-td noindex')[0]->text(), ':', true)) == '-') ? NULL : trim(stristr($one->find('td.score-td noindex')[0]->text(), ':', true));
+                            $gamesFromWeb[$j]['score_guest'] = (int)(trim(trim(stristr($one->find('td.score-td noindex')[0]->text(), ':'), "\t\n\r\0\x0B\x3A")) == '-') ? NULL : trim(trim(stristr($one->find('td.score-td noindex')[0]->text(), ':'), "\t\n\r\0\x0B\x3A"));
+                            $j++;
+                        } else {
+                            throw new Exception('Error during alias parsing '.$one->find('td.owner-td a.player')[0]->text().' or '.$one->find('td.guests-td a.player')[0]->text());
+                        }
                     }
                 }
             }
