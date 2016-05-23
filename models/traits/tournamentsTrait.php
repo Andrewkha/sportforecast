@@ -8,6 +8,7 @@
 
 namespace app\models\traits;
 
+use app\models\countries\Countries;
 use app\models\tournaments\Tournaments;
 use Yii;
 use app\models\result\Result;
@@ -190,6 +191,44 @@ trait tournamentsTrait
         $tournaments = self::find()
             ->andWhere(['not', ['id_tournament' => ArrayHelper::getColumn($participates, 'id_tournament')]])
             ->column();
+
+        if(!empty($tournaments))
+        {
+            return self::unionQueryPrep($tournaments);
+        } else
+            return UsersTournaments::find()->findModel(NULL, NULL)->all();
+
+    }
+    
+    //get finished tournaments, one per country
+    public static function getFinishedTournamentsOnePerCountry()
+    {
+        $countries = Countries::find()->select('id')->column();
+        $query = [];
+
+        foreach ($countries as $country)
+        {
+            $query[] = self::find()
+                ->where(['country' => $country])
+                ->andWhere(['is_active' => self::FINISHED])
+                ->orderBy(['startsOn' => SORT_DESC])
+                ->limit(1);
+        }
+
+        if(!empty($query))
+        {
+            $toExecute = $query[0];
+            $i = 1;
+
+            while(isset($query[$i]))
+            {
+                $toExecute = $toExecute->union($query[$i]);
+                $i++;
+            }
+
+            $tournaments = $toExecute->column();
+        } else
+            $tournaments = [];
 
         if(!empty($tournaments))
         {

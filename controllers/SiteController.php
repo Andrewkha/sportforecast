@@ -79,6 +79,12 @@ class SiteController extends Controller
     {
         Yii::$app->user->returnUrl = Yii::$app->request->url;
 
+        $finishedTournaments = new ArrayDataProvider([
+            'allModels' => Tournaments::getFinishedTournamentsOnePerCountry(),
+            'pagination' => false,
+        ]);
+
+
         if(Yii::$app->user->isGuest) {
 
             //list of active tournaments
@@ -91,7 +97,7 @@ class SiteController extends Controller
             $futureGames = Games::getAllFutureGames();
             $recentGames = Games::getAllRecentGames();
 
-            return $this->render('indexGuest', compact('tournaments', 'futureGames', 'recentGames', 'news'));
+            return $this->render('indexGuest', compact('tournaments', 'futureGames', 'recentGames', 'news', 'finishedTournaments'));
         }
 
         //list of active tournaments
@@ -114,7 +120,7 @@ class SiteController extends Controller
             'pagination' => false,
         ]);
 
-        return $this->render('indexUser', compact('tournaments', 'userTournaments', 'futureGames', 'recentGames'));
+        return $this->render('indexUser', compact('tournaments', 'userTournaments', 'futureGames', 'recentGames', 'finishedTournaments'));
     }
 
     public function actionLogin()

@@ -293,6 +293,83 @@ if(Yii::$app->session->hasFlash('success')) {
 
             </div>
 
+            <div class = "text-center">
+                <div class ="row">
+                    <?= extendedGridView::widget([
+                        'dataProvider' => $finishedTournaments,
+                        'showOnEmpty' => false,
+                        'emptyText' => '',
+                        'caption' => 'Законченные турниры',
+                        'captionOptions' => [
+                            'bordered' => false,
+                            'class' => 'text-center',
+                            'style' => 'font-size: 1.5em;'
+                        ],
+                        'condensed' => true,
+                        'bordered' => false,
+                        'summary' => '',
+                        'columns' => [
+
+                            [
+                                'header' => 'Турнир',
+                                'contentOptions' => [
+                                    'class' => 'text-left',
+                                    'style' => 'vertical-align:middle',
+                                ],
+                                'headerOptions' => [
+                                    'style' => 'text-align:center',
+                                ],
+                                'options' => [
+                                    'class' => 'col-xs-6'
+                                ],
+                                'content' => function($model) {
+                                    return Html::a($model->tournament_name, ['tournaments/details', 'id' => $model->id_tournament]);
+                                },
+                                'format' => 'url',
+                            ],
+
+                            [
+                                'header' => 'Победитель',
+                                'contentOptions' => [
+                                    'style' => 'vertical-align:middle',
+                                ],
+                                'headerOptions' => [
+                                    'style' => 'text-align:center',
+                                ],
+                                'options' => [
+                                    'class' => 'col-xs-4'
+                                ],
+                                'content' => function($model) {
+                                    return (isset($model->usersTournaments[0]->idUser->username))? $model->usersTournaments[0]->idUser->username :'-';
+                                },
+                            ],
+
+                            [
+                                'header' => 'Очки победителя',
+                                'contentOptions' => [
+                                    'style' => 'vertical-align:middle',
+                                ],
+                                'headerOptions' => [
+                                    'style' => 'text-align:center',
+                                ],
+                                'options' => [
+                                    'class' => 'col-xs-1'
+                                ],
+                                'content' => function($model) {
+                                    return (isset($model->usersTournaments[0]->points))? $model->usersTournaments[0]->points :'-';
+                                },
+                            ],
+                        ]
+                    ])
+
+                    ?>
+                    <p class = 'text-right'>
+                        <?= Html::a("<i class = 'fa fa-futbol-o'></i> Все турниры", ['tournaments/index']);?>
+                    </p>
+                </div>
+
+            </div>
+
             <div class="text-center">
                 <div class = "row">
                     <?= News::widget(['title' => 'Новости']);?>
