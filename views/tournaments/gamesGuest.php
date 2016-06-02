@@ -12,7 +12,7 @@ use app\models\teams\Teams;
 ?>
 <?php
 $this->title = 'Игры '.$team->idTeam->team_name.' в турнире '.$tournament->idTournament->tournament_name;
-$this->params['breadcrumbs'][] = ['label' => 'Турниры', 'url' => 'tournaments'];
+$this->params['breadcrumbs'][] = ['label' => 'Турниры', 'url' => '/tournaments'];
 $this->params['breadcrumbs'][] = ['label' => $tournament->idTournament->tournament_name, 'url' => ['tournaments/details', 'id' => $tournament->idTournament->id_tournament]];
 $this->params['breadcrumbs'][] = 'Игры '.$team->idTeam->team_name;
 
