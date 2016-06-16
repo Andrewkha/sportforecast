@@ -137,6 +137,8 @@ trait gameTrait
 
         $id_teams = ArrayHelper::getColumn(TeamTournaments::find()->where(['id_tournament' => $tournament])->all(), 'id');
 
+        $teamsCount = count($id_teams);
+
         $games = self::find()
             ->where(['in', 'id_team_home', $id_teams])
             ->orWhere(['in', 'id_team_guest', $id_teams])
@@ -144,7 +146,7 @@ trait gameTrait
             ->with('idTeamHome.idTeam', 'idTeamGuest.idTeam')
             ->orderBy(['date_time_game' =>  SORT_ASC])
             ->addOrderBy(['tour' => SORT_ASC])
-            ->limit((int)ceil($trn->num_tours / 2) + 1)
+            ->limit($teamsCount)
             ->all();
 
         $tours = array_unique(ArrayHelper::getColumn($games, 'tour'));
@@ -195,13 +197,15 @@ trait gameTrait
 
         $id_teams = ArrayHelper::getColumn(TeamTournaments::find()->where(['id_tournament' => $tournament])->all(), 'id');
 
+        $teamsCount = count($id_teams);
+
         $games = self::find()
             ->with('idTeamHome.idTeam', 'idTeamGuest.idTeam')
             ->where(['or', ['in', 'id_team_home', $id_teams], ['in', 'id_team_guest', $id_teams]])
             ->andWhere(['>=', 'date_time_game', time()])
             ->orderBy(['tour' =>  SORT_ASC])
             ->addOrderBy(['date_time_game' => SORT_ASC])
-            ->limit((int)ceil($trn->num_tours / 2) + 1)
+            ->limit($teamsCount)
             ->indexBy('id_game')
             ->asArray()
             ->all();
@@ -281,14 +285,16 @@ trait gameTrait
 
         $id_teams = ArrayHelper::getColumn(TeamTournaments::find()->where(['id_tournament' => $tournament])->all(), 'id');
 
+        $teamsCount = count($id_teams);
+
         $games = self::find()
             ->where(['in', 'id_team_home', $id_teams])
             ->orWhere(['in', 'id_team_guest', $id_teams])
             ->andWhere(['<', 'date_time_game', time()])
             ->with('idTeamHome.idTeam', 'idTeamGuest.idTeam')
             ->orderBy(['tour' => SORT_DESC])
-            ->addOrderBy(['date_time_game' => SORT_ASC])
-            ->limit((int)ceil($trn->num_tours / 2) + 1)
+            ->addOrderBy(['date_time_game' => SORT_DESC])
+            ->limit($teamsCount)
             ->all();
 
         $tours = array_unique(ArrayHelper::getColumn($games, 'tour'));
@@ -337,13 +343,15 @@ trait gameTrait
 
         $id_teams = ArrayHelper::getColumn(TeamTournaments::find()->where(['id_tournament' => $tournament])->all(), 'id');
 
+        $teamsCount = count($id_teams);
+
         $games = self::find()
             ->with('idTeamHome.idTeam', 'idTeamGuest.idTeam')
             ->where(['or', ['in', 'id_team_home', $id_teams], ['in', 'id_team_guest', $id_teams]])
             ->andWhere(['<', 'date_time_game', time()])
             ->orderBy(['tour' =>  SORT_DESC])
-            ->addOrderBy(['date_time_game' => SORT_ASC])
-            ->limit((int)ceil($trn->num_tours / 2) + 1)
+            ->addOrderBy(['date_time_game' => SORT_DESC])
+            ->limit($teamsCount)
             ->indexBy('id_game')
             ->asArray()
             ->all();
