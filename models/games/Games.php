@@ -193,7 +193,8 @@ class Games extends ActiveRecord
 
     private function getGamePoints() {
 
-        if($this->score_home !== NULL && $this->score_guest !== NULL) {
+        if(($this->score_home !== NULL && $this->score_guest !== NULL) && ($this->score_home != '' && $this->score_guest != '')) {
+
             if($this->score_home > $this->score_guest) {
                 $this->points_home = 3;
                 $this->points_guest = 0;
