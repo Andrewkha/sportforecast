@@ -146,7 +146,7 @@ class Games extends ActiveRecord
             ->one(), 'id_tournament');
 
         //updating the forecast points for the game
-        if(!$insert) {
+        if(!$insert && $this->score_home !== '' && $this->score_guest !== '') {
             Forecasts::setForecastPoints($this->id_game, $this->score_home, $this->score_guest, $tournament);
         }
 
