@@ -123,6 +123,7 @@ class Forecasts extends ActiveRecord
      */
     private function forecastPoints($scoreHome, $scoreGuest) {
 
+        if($scoreGuest == '' or $scoreHome == '' or $scoreHome == NULL or $scoreGuest == 0) return $this->points = 0;
         if(($this->fscore_home == $scoreHome) and ($this->fscore_guest == $scoreGuest)) return $this->points = 3;
         if(($this->fscore_home - $this->fscore_guest) == ($scoreHome - $scoreGuest)) return $this->points = 2;
         if((($this->fscore_home - $this->fscore_guest) > 0 and ($scoreHome - $scoreGuest) > 0) OR ((($this->fscore_home - $this->fscore_guest) < 0 and ($scoreHome - $scoreGuest) < 0))) return $this->points = 1;
