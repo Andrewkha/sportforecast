@@ -18,11 +18,11 @@ use yii\widgets\ActiveForm;
 
         <?= $form->field($model, 'id_team_home', [
             'template' => '{label}{input}{error}{hint}'
-        ])->dropDownList(ArrayHelper::map($teams, 'id', 'idTeam.team_name'), ['prompt' => '---Команда хозяев---']) ?>
+        ])->dropDownList(ArrayHelper::map($teams, 'id', 'idTeam.team_name'), ['prompt' => '---Команда хозяев---'])->label(false) ?>
 
         <?= $form->field($model, 'id_team_guest', [
             'template' => '{label}{input}{error}{hint}'
-        ])->dropDownList(ArrayHelper::map($teams, 'id', 'idTeam.team_name'), ['prompt' => '---Команда гостей---'])?>
+        ])->dropDownList(ArrayHelper::map($teams, 'id', 'idTeam.team_name'), ['prompt' => '---Команда гостей---'])->label(false) ?>
 
         <?= $form->field($model, 'tour', [
             'template' => '{label}{input}{error}{hint}'
