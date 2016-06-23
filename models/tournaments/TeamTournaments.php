@@ -92,7 +92,8 @@ class TeamTournaments extends ActiveRecord
 
         return self::find()
             ->where(['id_tournament' => $id])
-            ->with(['idTeam' => function($query){$query->orderBy('team_name', 'asc');}])
+            ->joinWith('idTeam')
+            ->orderBy('team_name', 'asc')
             ->indexBy('id')
             ->all();
     }
