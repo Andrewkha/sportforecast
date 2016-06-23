@@ -13,6 +13,8 @@ use yii\helpers\ArrayHelper;
 use Yii;
 use app\models\traits\tournamentsTrait;
 use DiDom\Document;
+use app\components\parsing\ParsingManager;
+
 
 /**
  * This is the model class for table "{{%tournaments}}".
@@ -163,145 +165,10 @@ class Tournaments extends \yii\db\ActiveRecord
 
     public function autoProcess()
     {
-        $teamTournament = TeamTournaments::find()
-            ->where(['id_tournament' => $this->id_tournament])
-            ->all();
-
-        //getting array of team aliases and participant id's
-        $aliases = ArrayHelper::map($teamTournament, 'alias', 'id');
-
-        //getting Participant IDs for the tournament
-
-        $teamIDs = ArrayHelper::getColumn($teamTournament, 'id');
-
-        $url = $this->autoProcessURL;
-        //$url = 'web/pl.html';
-        $html = new Document($url, true);
-
-        $count = $this->num_tours;
-        $j = 0;
-
-        $gamesFromWeb = [];
-
-        for($i = 0; $i < $count; $i++) {
-
-            $tour = $html->find('h3.titleH3')[$i]->text();
-            $tour =  preg_replace("/[^0-9]/", '', $tour);
-
-            $resultTable = $html->find('table.stat-table')[$i];
-
-            foreach($resultTable->find('tbody tr') as $k => $one) {
-
-                if($this->autoTimeToUnix($one->find('td.name-td')[0]->text()) > time() - 60*60*24*7*2 && $tour <= $count)
-                {
-                    if(isset($one->find('td.owner-td a.player')[0]) && isset($one->find('td.guests-td a.player')[0]))
-                    {
-                        if(isset($aliases[$one->find('td.owner-td a.player')[0]->text()]) && isset($aliases[$one->find('td.guests-td a.player')[0]->text()])) {
-
-                            $gamesFromWeb[$j]['id_team_home'] = (int)$aliases[$one->find('td.owner-td a.player')[0]->text()];
-                            $gamesFromWeb[$j]['id_team_guest'] = (int)$aliases[$one->find('td.guests-td a.player')[0]->text()];
-                            $gamesFromWeb[$j]['date_time_game'] = (int)$this->autoTimeToUnix($one->find('td.name-td')[0]->text());
-                            $gamesFromWeb[$j]['tour'] = $tour;
-                            $gamesFromWeb[$j]['score_home'] = (int)(trim(stristr($one->find('td.score-td noindex')[0]->text(), ':', true)) == '-') ? NULL : trim(stristr($one->find('td.score-td noindex')[0]->text(), ':', true));
-                            $gamesFromWeb[$j]['score_guest'] = (int)(trim(trim(stristr($one->find('td.score-td noindex')[0]->text(), ':'), "\t\n\r\0\x0B\x3A")) == '-') ? NULL : trim(trim(stristr($one->find('td.score-td noindex')[0]->text(), ':'), "\t\n\r\0\x0B\x3A"));
-                            $j++;
-                        } else {
-                            throw new Exception('Error during alias parsing '.$one->find('td.owner-td a.player')[0]->text().' or '.$one->find('td.guests-td a.player')[0]->text());
-                        }
-                    }
-                }
-            }
-        }
-
-        //all future games and previous where score is null
-        $gamesFromDB = Games::find()
-            ->where(['or',['in', 'id_team_home', $teamIDs], ['in', 'id_team_guest', $teamIDs]])
-            ->andWhere(['or',
-                ['>', 'date_time_game', time()],
-                ['and',
-                    ['<', 'date_time_game', time()],
-                    ['or', ['score_home' => null],['score_guest' => null]]
-                ],
-            ])
-            ->all();
-
-        /*matching web data with DB data. for those that matches found:
-            - if no changes, unset the game
-            - if there're changes - updating the model and putting it to array for save
-        */
-
-        foreach($gamesFromDB as $gameDB) {
-            foreach($gamesFromWeb as $k => $gameWeb) {
-
-                if($gameWeb['tour'] == $gameDB->tour && $gameWeb['id_team_home'] == $gameDB->id_team_home && $gameWeb['id_team_guest'] == $gameDB->id_team_guest) {
-
-                    if($gameDB->date_time_game != $gameWeb['date_time_game']) {
-                        $gameDB->date_time_game = $gameWeb['date_time_game'];
-                    }
-
-                    if($gameDB->score_home != $gameWeb['score_home']) {
-                        $gameDB->score_home = $gameWeb['score_home'];
-                    }
-
-                    if($gameDB->score_guest != $gameWeb['score_guest']) {
-                        $gameDB->score_guest = $gameWeb['score_guest'];
-                    }
-
-                    $dirtyAttr = $gameDB->getDirtyAttributes();
-
-                    if(!empty($dirtyAttr)) {
-
-                        $gameDB->save(false);
-                    }
-
-                    $unset = ArrayHelper::remove($gamesFromWeb, $k);
-                    continue;
-                }
-            }
-        }
-
-        foreach($gamesFromWeb as $gameWeb) {
-
-            $newGame = new Games();
-
-            foreach($gameWeb as $k => $attribute) {
-
-                $newGame->$k = $attribute;
-            }
-
-            if(!Games::find()
-                ->where(['tour' => $newGame->tour])
-                ->andWhere(['id_team_home' => $newGame->id_team_home])
-                ->andWhere(['id_team_guest' => $newGame->id_team_guest])
-                ->exists()
-            )
-            {
-                $newGame->save(false);
-            }
-
-        }
-
-        return true;
+        $parser = ParsingManager::getParser($this);
+        $parser->parse();
     }
 
-    private function autoTimeToUnix($str) {
-
-        $day = substr($str, 0, 2);
-        $str = trim(substr($str, 3));
-
-        $month = substr($str, 0, 2);
-        $str = trim(substr($str, 3));
-
-        $year = substr($str, 0, 4);
-
-        $str = trim(substr($str, 5));
-        $hour = substr($str, 0, 2);
-
-        $str = trim(substr($str, 3));
-        $min = substr($str, 0, 2);
-
-        return mktime($hour, $min , 0, $month, $day, $year);
-    }
 
     private function assignAdditionalPoints()
     {

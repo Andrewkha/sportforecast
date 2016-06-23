@@ -33,4 +33,10 @@ phpunit.phar
 /config
 /phpunit.xml
 /web/pl_files
-/web/pl.htm
+/web/pl.html
+/web/euro.htm
+controllers/ConsoleController.php
+controllers/TestController.php
+web/euro.htm
+web/euro_files/
+web/web.config
