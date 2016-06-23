@@ -46,8 +46,8 @@ abstract class AParsing
         $count = $this->tournament->num_tours;
         $j = 0;
 
-        //$html = new Document($this->tournament->autoProcessURL, true);
-        $html = new Document('euro.htm', true);
+        $html = new Document($this->tournament->autoProcessURL, true);
+        //$html = new Document('euro.htm', true);
         $gamesFromWeb = [];
 
         for($i = 0; $i < $count; $i++) {
