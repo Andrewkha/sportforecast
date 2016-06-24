@@ -94,10 +94,7 @@ class SiteController extends Controller
 
             ]);
 
-            $futureGames = Games::getAllFutureGames();
-            $recentGames = Games::getAllRecentGames();
-
-            return $this->render('indexGuest', compact('tournaments', 'futureGames', 'recentGames', 'news', 'finishedTournaments'));
+            return $this->render('indexGuest', compact('tournaments', 'news', 'finishedTournaments'));
         }
 
         //list of active tournaments
@@ -112,15 +109,12 @@ class SiteController extends Controller
             ]
         ]);
 
-        $futureGames = Games::getAllFutureGamesWithForecast(Yii::$app->user->id);
-        $recentGames = Games::getAllRecentGamesWithForecast(Yii::$app->user->id);
-
         $userTournaments = new ArrayDataProvider([
             'allModels' => Tournaments::getActivePendingTournamentsUserParticipate(Yii::$app->user->id),
             'pagination' => false,
         ]);
 
-        return $this->render('indexUser', compact('tournaments', 'userTournaments', 'futureGames', 'recentGames', 'finishedTournaments'));
+        return $this->render('indexUser', compact('tournaments', 'userTournaments', 'finishedTournaments'));
     }
 
     public function actionLogin()
