@@ -94,7 +94,7 @@ class SiteController extends Controller
 
             ]);
 
-            return $this->render('indexGuest', compact('tournaments', 'news', 'finishedTournaments'));
+            return $this->render('indexGuest', compact('tournaments', 'finishedTournaments'));
         }
 
         //list of active tournaments
