@@ -35,7 +35,7 @@ class euro2016Parsing extends AParsing
     protected function calculateHomeScore($score)
     {
         if(mb_substr($score, 0, 1) == 'п')
-            return (int)(trim(stristr($score, ':', true)) == '-') ? NULL : (int)trim(stristr($score, ':', true)) + 1;
+            return (int)(trim(stristr($score, ':', true)) == '-') ? NULL : (int)trim(trim(stristr($score, ':', true)), "п") + 1;
         else
             return (int)(trim(stristr($score, ':', true)) == '-') ? NULL : trim(stristr($score, ':', true));
     }
