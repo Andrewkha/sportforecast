@@ -89,13 +89,7 @@ abstract class AParsing
         $teamIDs = ArrayHelper::getColumn($teamTournament, 'id');
         $this->gamesFromDB = Games::find()
             ->where(['or',['in', 'id_team_home', $teamIDs], ['in', 'id_team_guest', $teamIDs]])
-            ->andWhere(['or',
-                ['>', 'date_time_game', time()],
-                ['and',
-                    ['<', 'date_time_game', time()],
-                    ['or', ['score_home' => null],['score_guest' => null]]
-                ],
-            ])
+            ->andWhere(['>', 'date_time_game', time() - 60*60*24*7*2])
             ->all();
     }
 
