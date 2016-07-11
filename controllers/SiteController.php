@@ -82,6 +82,12 @@ class SiteController extends Controller
         $finishedTournaments = new ArrayDataProvider([
             'allModels' => Tournaments::getFinishedTournamentsOnePerCountry(),
             'pagination' => false,
+            'sort' => [
+                'attributes' => ['startsOn'],
+                'defaultOrder' => [
+                    'startsOn' => SORT_DESC
+                ]
+            ]
         ]);
 
 
