@@ -9,6 +9,7 @@
 namespace app\components\parsing;
 
 
+use app\models\forecasts\Forecasts;
 use app\models\tournaments\Tournaments;
 use DiDom\Document;
 use yii\base\Exception;
@@ -47,7 +48,7 @@ abstract class AParsing
         $j = 0;
 
         $html = new Document($this->tournament->autoProcessURL, true);
-        //$html = new Document('euro.htm', true);
+        //$html = new Document('pl.htm', true);
         $gamesFromWeb = [];
 
         for($i = 0; $i < $count; $i++) {
@@ -123,8 +124,41 @@ abstract class AParsing
                     $unset = ArrayHelper::remove($this->gamesFromWeb, $k);
                     continue;
                 }
+
+                //if home and guest switched
+                if($gameWeb['tour'] == $gameDB->tour && $gameWeb['id_team_home'] == $gameDB->id_team_guest && $gameWeb['id_team_guest'] == $gameDB->id_team_home)
+                {
+
+                    $gameDB->id_team_home = $gameWeb['id_team_home'];
+                    $gameDB->id_team_guest = $gameWeb['id_team_guest'];
+
+                    if($gameDB->date_time_game != $gameWeb['date_time_game']) {
+                        $gameDB->date_time_game = $gameWeb['date_time_game'];
+                    }
+
+                    //need to switch forecast home <=> guest
+                    $forecasts = Forecasts::find()
+                        ->where(['id_game' => $gameDB->id_game])
+                        ->all();
+
+                    foreach ($forecasts as $forecast) {
+
+                        $temp = $forecast->fscore_home;
+                        $forecast->fscore_home = $forecast->fscore_guest;
+                        $forecast->fscore_guest = $temp;
+                        $forecast->save(false);
+                    }
+
+                    $gameDB->save(false);
+
+                    $unset = ArrayHelper::remove($this->gamesFromWeb, $k);
+                    continue;
+                }
+
             }
+
         }
+
     }
 
     private function addNewGames()
