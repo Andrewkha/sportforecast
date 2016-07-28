@@ -154,11 +154,8 @@ abstract class AParsing
                     $unset = ArrayHelper::remove($this->gamesFromWeb, $k);
                     continue;
                 }
-
             }
-
         }
-
     }
 
     private function addNewGames()
