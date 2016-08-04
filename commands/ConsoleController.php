@@ -40,11 +40,11 @@ class ConsoleController extends Controller
 
             try {
                 $one->autoProcess();
+                Yii::info("Task Autoprocess for $one->tournament_name has been executed", 'console');
             } catch (Exception $e) {
                 Yii::error($one->tournament_name.' '.$e->getMessage(), 'console');
                 continue;
             }
-            Yii::info("Task Autoprocess for $one->tournament_name has been executed", 'console');
         }
 
         return 0;
