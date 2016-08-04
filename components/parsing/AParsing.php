@@ -64,10 +64,12 @@ abstract class AParsing
                 {
                     if(isset($one->find('td.owner-td a.player')[0]) && isset($one->find('td.guests-td a.player')[0]))
                     {
-                        if(isset($aliases[$one->find('td.owner-td a.player')[0]->text()]) && isset($aliases[$one->find('td.guests-td a.player')[0]->text()])) {
+                        $owner = $one->find('td.owner-td a.player')[0]->text();
+                        $guest = $one->find('td.guests-td a.player')[0]->text();
+                        if(isset($aliases[$owner]) && isset($aliases[$guest])) {
 
-                            $gamesFromWeb[$j]['id_team_home'] = (int)$aliases[$one->find('td.owner-td a.player')[0]->text()];
-                            $gamesFromWeb[$j]['id_team_guest'] = (int)$aliases[$one->find('td.guests-td a.player')[0]->text()];
+                            $gamesFromWeb[$j]['id_team_home'] = (int)$aliases[$owner];
+                            $gamesFromWeb[$j]['id_team_guest'] = (int)$aliases[$guest];
                             $gamesFromWeb[$j]['date_time_game'] = (int)$this->autoTimeToUnix($one->find('td.name-td')[0]->text());
                             $gamesFromWeb[$j]['tour'] = $tour;
                             $score = $one->find('td.score-td noindex')[0]->text();
@@ -75,7 +77,8 @@ abstract class AParsing
                             $gamesFromWeb[$j]['score_guest'] = $this->calculateGuestScore($score);
                             $j++;
                         } else {
-                            throw new Exception('Error during alias parsing '.$one->find('td.owner-td a.player')[0]->text().' or '.$one->find('td.guests-td a.player')[0]->text());
+
+                            throw new Exception('Error during alias parsing '.$owner.' or '.$guest);
                         }
                     }
                 }
