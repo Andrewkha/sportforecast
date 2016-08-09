@@ -55,8 +55,8 @@ class Games extends ActiveRecord
         return [
             [['id_team_home', 'id_team_guest', 'tour'], 'required'],
             [['id_team_home', 'id_team_guest', 'tour'], 'integer'],
-            ['id_team_guest', 'compare', 'compareAttribute' => 'id_team_home', 'operator' => '!=', 'message' => 'Выберете разные команды'],
-            ['id_team_home', 'compare', 'compareAttribute' => 'id_team_guest', 'operator' => '!=', 'message' => 'Выберете разные команды'],
+            ['id_team_guest', 'compare', 'compareAttribute' => 'id_team_home', 'operator' => '!=', 'message' => 'Выберите разные команды'],
+            ['id_team_home', 'compare', 'compareAttribute' => 'id_team_guest', 'operator' => '!=', 'message' => 'Выберите разные команды'],
             ['date_time_game', 'date', 'format' => 'php:d.m.y H:i', 'timestampAttribute' => 'date_time_game'],
             [['score_home', 'score_guest'], 'integer', 'min' => 0, 'max' => 99],
             [['id_team_home', 'id_team_guest', 'tour', 'date_time_game'], 'ifGameExists', 'on' => 'addGame'],

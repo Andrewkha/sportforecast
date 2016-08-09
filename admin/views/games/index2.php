@@ -217,7 +217,7 @@ $this->params['breadcrumbs'][] = 'Игры турнира';
             ]);    ?>
             <?= $uploadForm->field($file, 'file')->fileInput([
                 'accept' => 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.12'
-            ])->label('Выберете файл');?>
+            ])->label('Выберите файл');?>
             <?= Html::submitButton('Загрузить', ['class' => 'btn btn-primary']);?>
 
             <?php ActiveForm::end();?>

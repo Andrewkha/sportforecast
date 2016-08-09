@@ -26,7 +26,7 @@ use yii\bootstrap\Modal;
             <?= $form->field($model, 'country',[
                 'template' => '{label} <div class="row"><div class="col-xs-10">{input}{error}{hint}</div></div>'
             ])->dropDownList(ArrayHelper::map(Countries::find()->orderBy('country', 'asc')->all(), 'id', 'country'),
-                    ['prompt' => '---Выберете страну---']) ?>
+                    ['prompt' => '---Выберите страну---']) ?>
 
             <?= $form->field($model, 'num_tours', [
                 'template' => '{label} <div class="row"><div class="col-xs-5 col-sm-3">{input}{error}{hint}</div></div>'

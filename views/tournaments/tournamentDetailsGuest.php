@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use app\assets\ModalAsset;
+use app\components\widgets\Standings;
 
 ModalAsset::register($this);
 /* @var $this yii\web\View */
@@ -26,10 +27,8 @@ $this->params['breadcrumbs'][] = $tournament->tournament_name;
         <hr>
 
         <div class = "row">
-            <?= $this->render('_standings', [
-                'teamParticipants' => $teamParticipants,
-            ]);
-            ?>
+
+            <?= Standings::widget(['standings' => $teamParticipants]);?>
 
             <?= $this->render('_forecasters', [
                 'forecasters' => $forecasters,

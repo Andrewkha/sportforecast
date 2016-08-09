@@ -23,7 +23,7 @@ use app\models\countries\Countries;
 
     <?= $form->field($model, 'country')->dropDownList(
         ArrayHelper::map(Countries::find()->orderBy('country', 'asc')->all(), 'id', 'country'),
-        ['prompt' => '---Выберете страну---']
+        ['prompt' => '---Выберите страну---']
     ); ?>
 
     <?php
