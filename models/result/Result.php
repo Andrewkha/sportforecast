@@ -116,10 +116,13 @@ class Result extends \yii\db\ActiveRecord
     {
         //getting list of games for the tournament
         $games = Games::getGamesForTournament($id_tournament);
+        $gameIDs = array_map(function($item){
+            return $item->id_game;
+        }, $games);
 
         //getting forecasts for the user for the tournament
         $forecasts = Forecasts::find()
-            ->where(['id_game' => $games, 'id_user' => $id_user])
+            ->where(['id_game' => $gameIDs, 'id_user' => $id_user])
             ->indexBy('id_game')
             ->asArray()
             ->all();
