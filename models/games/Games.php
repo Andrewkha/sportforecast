@@ -9,6 +9,7 @@ use app\models\tournaments\Tournaments;
 use app\models\tournaments\TourResultNotifications;
 use app\models\tournaments\TeamTournaments;
 use yii\db\ActiveRecord;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use app\models\forecasts\Forecasts;
 use app\models\result\Result;
@@ -122,6 +123,22 @@ class Games extends ActiveRecord
         return $this->hasOne(TeamTournaments::className(), ['id' => 'id_team_home']);
     }
 
+    public static function getGamesForTournament($id_tournament)
+    {
+        $teams = (new Query())
+            ->select('*')
+            ->from('{{%team_tournaments}}')
+            ->where(['id_tournament' => $id_tournament])
+            ->column();
+
+        $games = self::find()
+            ->where(['id_team_home' => $teams])
+            ->orderBy('tour')
+            ->all();
+
+        return($games);
+    }
+
     public function beforeSave($insert) {
 
         if(parent::beforeSave($insert)) {
@@ -191,7 +208,7 @@ class Games extends ActiveRecord
             $this->addError('id_team_home', "Игра $this->competitors в этом туре уже существует");
     }
 
-    private function getGamePoints() {
+    public function getGamePoints() {
 
         if(($this->score_home !== NULL && $this->score_guest !== NULL) && ($this->score_home != '' && $this->score_guest != '')) {
 

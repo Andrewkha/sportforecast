@@ -8,9 +8,6 @@ use app\models\teams\Teams;
 
 <?= GridView::widget([
     'dataProvider' => $teamParticipants,
-    'options' => [
-        'class' => 'col-xs-12 col-md-5 col-md-offset-1 col-lg-5'
-    ],
     'summary' => false,
     'caption' => 'Турнирная таблица',
     'responsive' => false,

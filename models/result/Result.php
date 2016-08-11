@@ -2,7 +2,12 @@
 
 namespace app\models\Result;
 
+use app\models\forecasts\Forecasts;
+use app\models\games\Games;
+use app\models\tournaments\TeamTournaments;
 use Yii;
+use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 
 /**
@@ -107,6 +112,82 @@ class Result extends \yii\db\ActiveRecord
         return $standings;
     }
 
+    public static function getForecastedStandings($id_tournament, $id_user)
+    {
+        //getting list of games for the tournament
+        $games = Games::getGamesForTournament($id_tournament);
+
+        //getting forecasts for the user for the tournament
+        $forecasts = Forecasts::find()
+            ->where(['id_game' => $games, 'id_user' => $id_user])
+            ->indexBy('id_game')
+            ->asArray()
+            ->all();
+
+        //if there's a forecast for the game -> put forecast score as a game score + recalculating points
+        foreach($games as &$game)
+        {
+            if(isset($forecasts[$game->id_game]))
+            {
+                $game->score_home = $forecasts[$game->id_game]['fscore_home'];
+                $game->score_guest = $forecasts[$game->id_game]['fscore_guest'];
+                $game->getGamePoints();
+            }
+        }
+
+        $games = ArrayHelper::toArray($games);
+
+        $teams = array_unique(
+            array_merge(
+                array_map(function($value){
+                    return $value['id_team_home'];
+                }, $games),
+                array_map(function($value){
+                    return $value['id_team_guest'];
+                }, $games)
+            )
+        );
+
+        $teamObjects = TeamTournaments::find()
+            ->where(['id' => $teams])
+            ->joinWith('idTeam')
+            ->indexBy('id')
+            ->all();
+
+        $result = array_map(function($item) use ($games, $teamObjects) {
+
+            $row['pts'] = 0;
+            $row['participant'] = $item;
+            $row['id'] = $item;
+            $row['team_logo'] = $teamObjects[$item]->idTeam->team_logo;
+            $row['team_name'] = $teamObjects[$item]->idTeam->team_name;
+            $row['games_played'] = 0;
+            foreach ($games as $game)
+            {
+                if($game['id_team_home'] == $item){
+                    $row['pts'] += $game['points_home'];
+                    if(isset($game['points_home']))
+                        $row['games_played'] += 1;
+                }
+
+                if($game['id_team_guest'] == $item) {
+                    $row['pts'] += $game['points_guest'];
+                    if(isset($game['points_guest']))
+                        $row['games_played'] += 1;
+                }
+            }
+
+            return $row;
+        }, $teams);
+
+        usort($result, function ($a, $b){
+            return $b['pts'] - $a['pts'];
+        });
+
+        return $result;
+
+    }
+
     public static function getWinners($id)
     {
         $db = Yii::$app->db;
@@ -150,6 +231,7 @@ class Result extends \yii\db\ActiveRecord
         return self::find()
             ->where(['home_participant_id' => $id])
             ->orWhere(['guest_participant_id' => $id])
+            ->orderBy(['dtime' => SORT_ASC])
             ->all();
     }
 

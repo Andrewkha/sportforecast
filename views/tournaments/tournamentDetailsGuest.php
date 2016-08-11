@@ -28,7 +28,9 @@ $this->params['breadcrumbs'][] = $tournament->tournament_name;
 
         <div class = "row">
 
-            <?= Standings::widget(['standings' => $teamParticipants]);?>
+            <div class = 'col-xs-12 col-md-5 col-md-offset-1 col-lg-5'>
+                <?= Standings::widget(['standings' => $teamParticipants]);?>
+            </div>
 
             <?= $this->render('_forecasters', [
                 'forecasters' => $forecasters,

@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use kartik\widgets\Growl;
 use app\assets\ModalAsset;
 use app\components\widgets\Standings;
+use yii\bootstrap\Collapse;
 
 /**
  * @var $tournament \app\models\tournaments\Tournaments
@@ -63,7 +64,23 @@ $this->params['breadcrumbs'][] = $tournament->tournament_name;
 
         <div class = "row">
 
-            <?= Standings::widget(['standings' => $teamParticipants]);?>
+            <div class = 'col-xs-12 col-md-5 col-md-offset-1 col-lg-5'>
+                <?= Standings::widget(['standings' => $teamParticipants]);?>
+            </div>
+
+            <? $collapseContent = Standings::widget(['standings' => $forecastedStandings]) ;?>
+
+            <div class = 'col-xs-12 col-md-5 col-md-offset-1 col-lg-5'>
+                <?= Collapse::widget([
+                    'encodeLabels' => false,
+                    'items' => [
+                        [
+                            'label' => 'Если сбылись все Ваши прогнозы...',
+                            'content' => $collapseContent,
+                        ],
+                    ]
+                ]);?>
+            </div>
 
             <?= $this->render('_winners', [
                 'winners' => $winners,
@@ -72,6 +89,7 @@ $this->params['breadcrumbs'][] = $tournament->tournament_name;
                 'totalAdditionalPoints' => $totalAdditionalPoints
             ]);
             ?>
+
 
             <?= $this->render('_forecasters', [
                 'forecasters' => $forecasters,

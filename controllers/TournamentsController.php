@@ -170,8 +170,13 @@ class TournamentsController extends Controller{
             $tourGames = Games::getGamesGroupedByTour($id, $tours);
             $viewFile = 'tournamentDetailsGuest';
             $winners = [];
+            $forecastedStandings = [];
         } else {
 
+            $forecastedStandings = new ArrayDataProvider([
+                'allModels' => Result::getForecastedStandings($id, $user->id),
+                'pagination' => false,
+            ]);
             $tourGames = Games::getGamesGroupedByTourWithForecast($id, $tours, $user->id);
             $viewFile = 'tournamentDetailsUser';
             
@@ -189,7 +194,7 @@ class TournamentsController extends Controller{
             }
         }
 
-        $data = compact('tournament', 'teamParticipants', 'forecasters', 'tour_list', 'tourGames', 'winners');
+        $data = compact('tournament', 'teamParticipants', 'forecasters', 'tour_list', 'tourGames', 'winners', 'forecastedStandings');
 
         if($tournament->is_active == Tournaments::FINISHED)
         {
