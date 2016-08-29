@@ -50,6 +50,35 @@ class ConsoleController extends Controller
         return 0;
     }
 
+    /*
+     * get tours with wrong number of games - relevant for games schedule changes
+     */
+
+    public function actionToursWithWrongNumberGames()
+    {
+        $tournaments = Tournaments::getAutoprocessTournaments();
+
+        foreach ($tournaments as $one)
+        {
+            $games = Games::getGamesForTournament($one->id_tournament);
+
+            $gamesPerTour = array_fill(1, $one->num_tours, 0);
+            array_walk($games, function ($item) use (&$gamesPerTour) {
+                $gamesPerTour[$item->tour]++;
+            });
+
+            $message = '';
+            foreach ($gamesPerTour as $k => $element)
+            {
+                if($element != ($one->num_tours/4 + 1/2))
+                    $message .=  $one->tournament_name.' '.$k. ' tour has wrong number of games' . "\r \n";
+            }
+
+            if(strlen($message) > 0)
+
+                Yii::error($message, 'console');
+        }
+    }
 
     /**
      * get games with null score but not null points
