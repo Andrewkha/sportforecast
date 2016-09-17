@@ -53,32 +53,33 @@ abstract class AParsing
 
         for($i = 0; $i < $count; $i++) {
 
-            $tour = $html->find('h3.titleH3')[$i]->text();
-            $tour = $this->getTour($tour);
+            if(isset($html->find('h3.titleH3.bordered.mB10')[$i]))
+            {
+                $tour = $html->find('h3.titleH3.bordered.mB10')[$i]->text();
+                $tour = $this->getTour($tour);
+                $resultTable = $html->find('table.stat-table')[$i];
+                foreach($resultTable->find('tbody tr') as $k => $one) {
 
-            $resultTable = $html->find('table.stat-table')[$i];
-
-            foreach($resultTable->find('tbody tr') as $k => $one) {
-
-                if($this->autoTimeToUnix($one->find('td.name-td')[0]->text()) > time() - 60*60*24*7*2 && $tour <= $count)
-                {
-                    if(isset($one->find('td.owner-td a.player')[0]) && isset($one->find('td.guests-td a.player')[0]))
+                    if($this->autoTimeToUnix($one->find('td.name-td')[0]->text()) > time() - 60*60*24*7*2 && $tour <= $count)
                     {
-                        $owner = $one->find('td.owner-td a.player')[0]->text();
-                        $guest = $one->find('td.guests-td a.player')[0]->text();
-                        if(isset($aliases[$owner]) && isset($aliases[$guest])) {
+                        if(isset($one->find('td.owner-td a.player')[0]) && isset($one->find('td.guests-td a.player')[0]))
+                        {
+                            $owner = $one->find('td.owner-td a.player')[0]->text();
+                            $guest = $one->find('td.guests-td a.player')[0]->text();
+                            if(isset($aliases[$owner]) && isset($aliases[$guest])) {
 
-                            $gamesFromWeb[$j]['id_team_home'] = (int)$aliases[$owner];
-                            $gamesFromWeb[$j]['id_team_guest'] = (int)$aliases[$guest];
-                            $gamesFromWeb[$j]['date_time_game'] = (int)$this->autoTimeToUnix($one->find('td.name-td')[0]->text());
-                            $gamesFromWeb[$j]['tour'] = $tour;
-                            $score = $one->find('td.score-td noindex')[0]->text();
-                            $gamesFromWeb[$j]['score_home'] = $this->calculateHomeScore($score);
-                            $gamesFromWeb[$j]['score_guest'] = $this->calculateGuestScore($score);
-                            $j++;
-                        } else {
+                                $gamesFromWeb[$j]['id_team_home'] = (int)$aliases[$owner];
+                                $gamesFromWeb[$j]['id_team_guest'] = (int)$aliases[$guest];
+                                $gamesFromWeb[$j]['date_time_game'] = (int)$this->autoTimeToUnix($one->find('td.name-td')[0]->text());
+                                $gamesFromWeb[$j]['tour'] = $tour;
+                                $score = $one->find('td.score-td noindex')[0]->text();
+                                $gamesFromWeb[$j]['score_home'] = $this->calculateHomeScore($score);
+                                $gamesFromWeb[$j]['score_guest'] = $this->calculateGuestScore($score);
+                                $j++;
+                            } else {
 
-                            throw new Exception('Error during alias parsing '.$owner.' or '.$guest);
+                                throw new Exception('Error during alias parsing '.$owner.' or '.$guest);
+                            }
                         }
                     }
                 }
