@@ -10,7 +10,7 @@ namespace app\components\parsing;
 
 use app\components\parsing\AParsing;
 
-class euro2016Parsing extends AParsing
+class euro2016Parsing extends sportsParsing
 {
     const TOURS = [
         'Тур 1' => 1,
