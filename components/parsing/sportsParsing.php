@@ -36,7 +36,7 @@ abstract class sportsParsing extends AParsing
 
                 $resultTable = $results->find('div.stat.mB15 table.stat-table')[$i];
                 foreach($resultTable->find('tbody tr') as $k => $one) {
-                    if($this->autoTimeToUnix($one->find('td.name-td')[0]->text()) > time() - 60*60*24*7*4 && $tour <= $count)
+                    if($this->autoTimeToUnix($one->find('td.name-td')[0]->text()) > time() - 60*60*24*7*2 && $tour <= $count)
                     {
                         if(isset($one->find('td.owner-td a.player')[0]) && isset($one->find('td.guests-td a.player')[0]))
                         {

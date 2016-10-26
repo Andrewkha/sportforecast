@@ -16,7 +16,7 @@ class ParsingManager
 
     /**
      * @param $tournament Tournaments
-     * @return euro2016Parsing|StandardParsing
+     * @return AParsing
      */
 
     public static function getParser($tournament)
@@ -28,7 +28,7 @@ class ParsingManager
                 break;
 
             default:
-                return new StandardParsing($tournament);
+                return new ChampionatStandardParsing($tournament);
         }
     }
 }
