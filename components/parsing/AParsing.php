@@ -61,18 +61,17 @@ abstract class AParsing
                         $gameDB->date_time_game = $gameWeb['date_time_game'];
                     }
 
-                    if($gameDB->score_home != $gameWeb['score_home']) {
+                    if($gameDB->score_home !== $gameWeb['score_home']) {
                         $gameDB->score_home = $gameWeb['score_home'];
                     }
 
-                    if($gameDB->score_guest != $gameWeb['score_guest']) {
+                    if($gameDB->score_guest !== $gameWeb['score_guest']) {
                         $gameDB->score_guest = $gameWeb['score_guest'];
                     }
 
                     $dirtyAttr = $gameDB->getDirtyAttributes();
 
                     if(!empty($dirtyAttr)) {
-
                         $gameDB->save(false);
                     }
 

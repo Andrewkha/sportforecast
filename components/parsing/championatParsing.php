@@ -21,7 +21,7 @@ abstract class championatParsing extends AParsing
         $count = $this->tournament->num_tours;
 
         //$html = new Document($this->tournament->autoProcessURL, true);
-        $html = new Document('pl_ch.htm', true);
+        $html = new Document('italy.htm', true);
 
         $table = $html->find('table.table.b-table-sortlist tbody')[0];
 
@@ -55,7 +55,6 @@ abstract class championatParsing extends AParsing
                 }
             }
         }
-
         $this->gamesFromWeb = $gamesFromWeb;
     }
 
