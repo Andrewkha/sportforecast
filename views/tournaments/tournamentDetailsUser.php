@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $tournament->tournament_name;
                 <?= Standings::widget(['standings' => $teamParticipants]);?>
             </div>
 
-            <? $collapseContent = Standings::widget(['standings' => $forecastedStandings]) ;?>
+            <?php $collapseContent = Standings::widget(['standings' => $forecastedStandings]) ;?>
 
             <div class = 'col-xs-12 col-md-5 col-md-offset-1 col-lg-5'>
                 <?= Collapse::widget([
