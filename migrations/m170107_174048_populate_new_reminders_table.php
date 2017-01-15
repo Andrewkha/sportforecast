@@ -6,7 +6,7 @@ use app\migratemodels\ForecastReminders;
 
 class m170107_174048_populate_new_reminders_table extends Migration
 {
-    public function up()
+    public function safeUp()
     {
         $old = Reminders::find()->all();
 

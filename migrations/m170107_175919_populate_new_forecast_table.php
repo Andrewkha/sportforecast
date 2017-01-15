@@ -6,7 +6,7 @@ use app\migratemodels\Forecast;
 
 class m170107_175919_populate_new_forecast_table extends Migration
 {
-    public function up()
+    public function safeUp()
     {
         $old = Forecasts::find()->all();
 

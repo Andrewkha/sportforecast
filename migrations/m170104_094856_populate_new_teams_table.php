@@ -6,7 +6,7 @@ use app\migratemodels\Team;
 
 class m170104_094856_populate_new_teams_table extends Migration
 {
-    public function up()
+    public function safeUp()
     {
         $oldTeams = Teams::find()->all();
 

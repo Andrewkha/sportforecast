@@ -7,7 +7,7 @@ use app\models\result\Result;
 
 class m170107_143425_populate_new_games_table extends Migration
 {
-    public function up()
+    public function safeUp()
     {
         $old = Games::find()->all();
 

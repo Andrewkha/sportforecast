@@ -4,7 +4,7 @@ use yii\db\Migration;
 
 class m170104_090334_new_countries_table extends Migration
 {
-    public function up()
+    public function safeUp()
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {

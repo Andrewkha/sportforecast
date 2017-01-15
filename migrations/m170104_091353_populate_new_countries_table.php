@@ -6,7 +6,7 @@ use app\migratemodels\Country;
 
 class m170104_091353_populate_new_countries_table extends Migration
 {
-    public function up()
+    public function safeUp()
     {
         $oldCountries = Countries::find()->all();
 

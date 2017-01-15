@@ -4,7 +4,7 @@ use yii\db\Migration;
 
 class m170107_174915_new_forecasts_table extends Migration
 {
-    public function up()
+    public function safeUp()
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {

@@ -6,7 +6,7 @@ use app\migratemodels\TourResultNotification;
 
 class m170107_170541_populate_tour_result_notification_table extends Migration
 {
-    public function up()
+    public function safeUp()
     {
         $old = TourResultNotifications::find()->all();
 

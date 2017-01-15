@@ -14,7 +14,7 @@ class m170107_161031_create_junction_table_for_sf_user_and_sf_tournament_tables 
     /**
      * @inheritdoc
      */
-    public function up()
+    public function safeUp()
     {
         $this->createTable('sf_user_tournament', [
             'user_id' => $this->integer(),

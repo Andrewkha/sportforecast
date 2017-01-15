@@ -4,7 +4,7 @@ use yii\db\Migration;
 
 class m170107_173627_new_reminders_table extends Migration
 {
-    public function up()
+    public function safeUp()
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {

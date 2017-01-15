@@ -4,7 +4,7 @@ use yii\db\Migration;
 
 class m170107_162220_new_tour_result_notification_table extends Migration
 {
-    public function up()
+    public function safeUp()
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {

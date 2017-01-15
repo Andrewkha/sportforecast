@@ -6,7 +6,7 @@ use app\migratemodels\Newz;
 
 class m170107_182521_populate_newz_table extends Migration
 {
-    public function up()
+    public function safeUp()
     {
         $old = News::find()->all();
 

@@ -6,7 +6,7 @@ use app\migratemodels\Tournament;
 
 class m170105_183227_populate_new_tournaments_table extends Migration
 {
-    public function up()
+    public function safeUp()
     {
         $oldTournaments = Tournaments::find()->all();
 

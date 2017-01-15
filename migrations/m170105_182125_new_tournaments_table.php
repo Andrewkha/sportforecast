@@ -4,7 +4,7 @@ use yii\db\Migration;
 
 class m170105_182125_new_tournaments_table extends Migration
 {
-    public function up()
+    public function safeUp()
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {

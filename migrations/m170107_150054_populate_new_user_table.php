@@ -6,7 +6,7 @@ use app\migratemodels\User;
 
 class m170107_150054_populate_new_user_table extends Migration
 {
-    public function up()
+    public function safeUp()
     {
         $old = Users::find()->all();
 

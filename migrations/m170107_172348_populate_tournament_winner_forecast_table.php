@@ -6,7 +6,7 @@ use app\migratemodels\TournamentWinnerForecast;
 
 class m170107_172348_populate_tournament_winner_forecast_table extends Migration
 {
-    public function up()
+    public function safeUp()
     {
         $old = Top3TeamsForecast::find()->all();
 
