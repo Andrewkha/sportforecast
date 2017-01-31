@@ -15,6 +15,7 @@ class m170105_182125_new_tournaments_table extends Migration
             'id' => $this->primaryKey(),
             'tournament' => $this->string('150')->notNull(),
             'country_id' => $this->integer()->notNull(),
+            'logo' => $this->string(),
             'type' => $this->integer(1)->Null(),
             'tours' => $this->integer(2)->Null(),
             'status' => $this->integer(1)->Null(),
