@@ -17,6 +17,7 @@ class m170105_183227_populate_new_tournaments_table extends Migration
             $newTournament->tournament = $one->tournament_name;
             $newTournament->country_id = $one->country;
             $newTournament->tours = $one->num_tours;
+            $newTournament->type = $one->id_tournament === 16 ? 0 : 1;
             $newTournament->status = $one->is_active;
             $newTournament->starts = $one->startsOn;
             $newTournament->autoprocess = $one->enableAutoprocess;
