@@ -17,10 +17,10 @@ class m170107_112549_create_junction_table_for_sf_team_and_sf_tournament_tables 
     public function safeUp()
     {
         $this->createTable('sf_team_tournament', [
+            'id' => $this->primaryKey(),
             'team_id' => $this->integer(),
             'tournament_id' => $this->integer(),
             'alias' => $this->string(),
-            'PRIMARY KEY(team_id, tournament_id)',
         ]);
 
         // creates index for column `team_id`
