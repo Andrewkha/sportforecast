@@ -12,12 +12,12 @@ class m170107_174915_new_forecasts_table extends Migration
         }
 
         $this->createTable('{{%forecast}}', [
+            'id' => $this->primaryKey(),
             'user_id' => $this->integer(),
             'game_id' => $this->integer(),
             'fscoreHome' => $this->integer(2)->Null(),
             'fscoreGuest' => $this->integer(2)->Null(),
             'date' => $this->integer(),
-            'PRIMARY KEY(user_id, game_id)',
         ]);
 
         $this->createIndex('idx-forecast-user_id', '{{%forecast}}', 'user_id');
