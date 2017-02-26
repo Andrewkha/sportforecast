@@ -12,12 +12,12 @@ class m170107_171151_new_tournaments_winners_forecast_table extends Migration
         }
 
         $this->createTable('{{%tournament_winner_forecast}}', [
+            'id' => $this->primaryKey(),
             'user_id' => $this->integer(),
             'tournament_id' => $this->integer(),
             'team_id' => $this->integer(),
             'position' => $this->integer(1),
             'date' => $this->integer(),
-            'PRIMARY KEY(user_id, tournament_id, team_id)',
         ]);
 
         $this->createIndex('idx-tournament_winner_forecast-user_id', '{{%tournament_winner_forecast}}', 'user_id');
