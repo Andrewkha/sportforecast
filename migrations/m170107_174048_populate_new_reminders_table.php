@@ -16,7 +16,14 @@ class m170107_174048_populate_new_reminders_table extends Migration
             $new->user_id = $one->user;
             $new->tournament_id = $one->tournament;
             $new->tour = $one->tour;
-            $new->reminders = $one->reminders;
+            if ($one->reminders == 2) {
+                $new2 = new ForecastReminders();
+                $new2->user_id = $one->user;
+                $new2->tournament_id = $one->tournament;
+                $new2->tour = $one->tour;
+                $new2->date = $one->date;
+                $new2->save(false);
+            }
             $new->date = $one->date;
 
             $new->save(false);

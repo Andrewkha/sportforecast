@@ -23,6 +23,7 @@ class m170105_183227_populate_new_tournaments_table extends Migration
             $newTournament->autoprocess = $one->enableAutoprocess;
             $newTournament->autoprocessURL = $one->autoProcessURL;
             $newTournament->winnersForecastDue = $one->wfDueTo;
+            $newTournament->logo = 'nologo.jpeg';
             $newTournament->save(false);
         }
     }

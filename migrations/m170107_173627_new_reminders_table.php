@@ -12,12 +12,11 @@ class m170107_173627_new_reminders_table extends Migration
         }
 
         $this->createTable('{{%forecast_reminders}}', [
+            'id' => $this->primaryKey(),
             'user_id' => $this->integer(),
             'tournament_id' => $this->integer(),
             'tour' => $this->integer(2),
-            'reminders' => $this->integer(1),
             'date' => $this->integer(),
-            'PRIMARY KEY(user_id, tournament_id, tour)',
         ]);
 
         $this->createIndex('idx-forecast_reminders-user_id', '{{%forecast_reminders}}', 'user_id');
