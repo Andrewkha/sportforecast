@@ -60,6 +60,9 @@ class ConsoleController extends Controller
 
         foreach ($tournaments as $one)
         {
+            if ($one->id_tournament === 23)
+                continue;
+            
             $games = Games::getGamesForTournament($one->id_tournament);
 
             $gamesPerTour = array_fill(1, $one->num_tours, 0);
