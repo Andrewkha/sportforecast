@@ -20,8 +20,8 @@ abstract class championatParsing extends AParsing
 
         $count = $this->tournament->num_tours;
 
-        $html = new Document($this->tournament->autoProcessURL, true);
-        //$html = new Document('pl.htm', true);
+        //$html = new Document($this->tournament->autoProcessURL, true);
+        $html = new Document('pl.htm', true);
 
         $table = $html->find('table.table.stat-results__table tbody')[0];
 
@@ -78,10 +78,10 @@ abstract class championatParsing extends AParsing
         $year = (int)substr($str, 0, 4);
 
         $str = trim(substr($str, 5));
-        $hour = (int)substr($str, 0, 2);
+        $hour = (int)substr($str, 2, 2);
 
         $str = trim(substr($str, 3));
-        $min = (int)substr($str, 0, 2);
+        $min = (int)substr($str, 2, 2);
 
         return mktime($hour, $min , 0, $month, $day, $year);
     }
