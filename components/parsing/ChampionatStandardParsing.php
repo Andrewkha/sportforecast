@@ -13,11 +13,11 @@ class ChampionatStandardParsing extends championatParsing
 {
     protected function calculateHomeScore($homeScore)
     {
-        return (trim($homeScore) === '-')? NULL : (int)trim($homeScore);
+        return (trim($homeScore) === '–')? NULL : trim($homeScore);
     }
 
     protected function calculateGuestScore($guestScore)
     {
-        return (trim($guestScore) === '-')? NULL : (int)trim($guestScore);
+        return (trim($guestScore) === '–')? NULL : trim($guestScore);
     }
 }

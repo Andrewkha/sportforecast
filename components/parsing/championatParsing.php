@@ -21,30 +21,32 @@ abstract class championatParsing extends AParsing
         $count = $this->tournament->num_tours;
 
         $html = new Document($this->tournament->autoProcessURL, true);
-        //$html = new Document('italy.htm', true);
+        //$html = new Document('pl.htm', true);
 
-        $table = $html->find('table.table.b-table-sortlist tbody')[0];
+        $table = $html->find('table.table.stat-results__table tbody')[0];
 
         $j = 0;
         $gamesFromWeb = [];
 
         foreach ($table->find('tr') as $row)
         {
-            $time = $this->autoTimeToUnix($row->find('td.sport__calendar__table__date')[0]->text());
+            $time = $this->autoTimeToUnix($row->find('td.stat-results__date-time')[0]->text());
 
             if($time > time() - 60*60*24*7*2)
             {
-                $home = $row->find('td.sport__calendar__table__teams a.sport__calendar__table__team')[0]->text();
-                $guest = $row->find('td.sport__calendar__table__teams a.sport__calendar__table__team')[1]->text();
+                $home = trim($row->find('td.stat-results__title span.stat-results__title-team a span.table-item')[0]->text());
+                $guest = trim($row->find('td.stat-results__title span.stat-results__title-team a span.table-item')[1]->text());
 
                 if(isset($aliases[$home]) && isset($aliases[$guest])) {
-                    $gamesFromWeb[$j]['tour'] = $row->find('td.sport__calendar__table__tour')[0]->text();
-                    $gamesFromWeb[$j]['date_time_game'] = $this->autoTimeToUnix($row->find('td.sport__calendar__table__date')[0]->text());
+                    $gamesFromWeb[$j]['tour'] = $row->find('td.stat-results__tour-num')[0]->text();
+                    $gamesFromWeb[$j]['date_time_game'] = $time;
                     $gamesFromWeb[$j]['id_team_home'] = (int)$aliases[$home];
                     $gamesFromWeb[$j]['id_team_guest'] = (int)$aliases[$guest];
 
-                    $homeScore = $row->find('td.sport__calendar__table__result span.sport__calendar__table__result__left')[0]->text();
-                    $guestScore = $row->find('td.sport__calendar__table__result span.sport__calendar__table__result__right')[0]->text();
+                    $score = trim($row->find('td.stat-results__count a span.stat-results__count-main')[0]->text(), ' ');
+
+                    $homeScore = explode(':', $score)[0];
+                    $guestScore= explode(':', $score)[1];
 
                     $gamesFromWeb[$j]['score_home'] = $this->calculateHomeScore($homeScore);
                     $gamesFromWeb[$j]['score_guest'] = $this->calculateHomeScore($guestScore);
@@ -55,6 +57,7 @@ abstract class championatParsing extends AParsing
                 }
             }
         }
+
         $this->gamesFromWeb = $gamesFromWeb;
     }
 
